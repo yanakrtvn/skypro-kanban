@@ -909,6 +909,20 @@ body {
   letter-spacing: 0.2px;
 }
 
+.loading__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 100%;
+}
+
+.loading__text {
+  font-size: 18px;
+  color: #94A6BE;
+  font-weight: 500;
+}
+
 @media screen and (max-width: 1200px) {
   .main__block {
     width: 100%;

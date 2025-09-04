@@ -1,4 +1,12 @@
+import { useState } from "react";
+
 function Header() {
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  const userClick = () => {
+    setUserMenuOpen(!userMenuOpen);
+  };
+
   return (
     <header className="header">
       <div className="container">
@@ -17,12 +25,13 @@ function Header() {
             <button className="header__btn-main-new _hover01" id="btnMainNew">
               <a href="#popNewCard">Создать новую задачу</a>
             </button>
-            <a href="#user-set-target" className="header__user _hover02">
+            <a href="#user-set-target" className="header__user _hover02" onClick={userClick}>
               Ivan Ivanov
             </a>
             <div
               className="header__pop-user-set pop-user-set"
               id="user-set-target"
+              style={{ display: userMenuOpen ? 'block' : 'none' }}
             >
               <p className="pop-user-set__name">Ivan Ivanov</p>
               <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
