@@ -11,8 +11,7 @@ function Column({ title, cards }) {
           <Card
             key={card.id}
             title={card.title}
-            theme={card.theme}
-            category={card.category}
+            topic={card.topic}
             date={card.date}
           />
         ))}
