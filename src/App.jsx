@@ -3,14 +3,13 @@ import PopNewCard from './components/PopNewCard/PopNewCard.jsx';
 import PopBrowse from './components/PopBrowse/PopBrowse.jsx';
 import Header from './components/Header/Header.jsx';
 import Main from './components/Main/Main.jsx';
-import './App.css';
 
 function App() {
   return (
     <div className="wrapper">
-      <PopExit />
+      {/* <PopExit />
       <PopNewCard />
-      <PopBrowse />
+      <PopBrowse /> */}
       <Header />
       <Main />
     </div>
