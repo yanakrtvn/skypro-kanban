@@ -1,36 +1,35 @@
+import { 
+  SCardItem,
+  SCardContainer,
+  SCardGroup,
+  SCardTheme,
+  SCardButton,
+  SCardBtn,
+  SCardTitle,
+  SCardContent,
+  SCardDate,
+  SDateText
+} from "./Card.styled";
+
 function Card({ title, topic, date }) {
-
-  const getThemeClass = () => {
-    switch(topic) {
-      case 'Web Design': return 'orange';
-      case 'Research': return 'green';
-      case 'Copywriting': return 'purple';
-      default: return 'orange';
-    }
-  };
-
-  const themeClass = getThemeClass();
-
   return (
-    <div className="cards__item">
-      <div className="cards__card card">
-        <div className="card__group">
-          <div className={`card__theme _${themeClass}`}>
-            <p className={`_${themeClass}`}>{topic}</p>
-          </div>
-          <a href="#popBrowse" target="_self">
-            <div className="card__btn">
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          </a>
-        </div>
-        <div className="card__content">
+    <SCardItem>
+      <SCardContainer>
+        <SCardGroup>
+          <SCardTheme $themecolor={topic}>
+            <p>{topic}</p>
+          </SCardTheme>
+          <SCardButton href="#popBrowse" target="_self">
+            <SCardBtn></SCardBtn>
+            <SCardBtn></SCardBtn>
+            <SCardBtn></SCardBtn>
+          </SCardButton>
+        </SCardGroup>
+        <SCardContent>
           <a href="" target="_blank">
-            <h3 className="card__title">{title}</h3>
+            <SCardTitle>{title}</SCardTitle>
           </a>
-          <div className="card__date">
+          <SCardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="13"
@@ -59,11 +58,11 @@ function Card({ title, topic, date }) {
                 </clipPath>
               </defs>
             </svg>
-            <p>{date}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+            <SDateText>{date}</SDateText>
+          </SCardDate>
+        </SCardContent>
+      </SCardContainer>
+    </SCardItem>
   );
 }
 
