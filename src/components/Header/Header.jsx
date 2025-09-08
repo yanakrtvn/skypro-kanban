@@ -1,4 +1,13 @@
 import { useState } from "react";
+import { 
+  SHeader,
+  SHeaderBlock,
+  SHeaderLogo,
+  SHeaderNav,
+  SHeaderButton,
+  SHeaderUser,
+  SHeaderUserMenu 
+} from "./Header.styled";
 
 function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -8,30 +17,30 @@ function Header() {
   };
 
   return (
-    <header className="header">
+    <SHeader>
       <div className="container">
-        <div className="header__block">
-          <div className="header__logo _show _light">
+        <SHeaderBlock>
+          <SHeaderLogo className="_show _light">
             <a href="" target="_self">
               <img src="images/logo.png" alt="logo" />
             </a>
-          </div>
-          <div className="header__logo _dark">
+          </SHeaderLogo>
+          <SHeaderLogo className="_dark">
             <a href="" target="_self">
               <img src="images/logo_dark.png" alt="logo" />
             </a>
-          </div>
-          <nav className="header__nav">
-            <button className="header__btn-main-new _hover01" id="btnMainNew">
+          </SHeaderLogo>
+          <SHeaderNav>
+            <SHeaderButton className="_hover01" id="btnMainNew">
               <a href="#popNewCard">Создать новую задачу</a>
-            </button>
-            <a href="#user-set-target" className="header__user _hover02" onClick={userClick}>
+            </SHeaderButton>
+            <SHeaderUser className="_hover02" onClick={userClick}>
               Ivan Ivanov
-            </a>
-            <div
+            </SHeaderUser>
+            <SHeaderUserMenu 
               className="header__pop-user-set pop-user-set"
               id="user-set-target"
-              style={{ display: userMenuOpen ? 'block' : 'none' }}
+              $visible={userMenuOpen}
             >
               <p className="pop-user-set__name">Ivan Ivanov</p>
               <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
@@ -42,11 +51,12 @@ function Header() {
               <button type="button" className="_hover03">
                 <a href="#popExit">Выйти</a>
               </button>
-            </div>
-          </nav>
-        </div>
+            </SHeaderUserMenu>
+          </SHeaderNav>
+        </SHeaderBlock>
       </div>
-    </header>
+    </SHeader>
   );
 }
+
 export default Header;
