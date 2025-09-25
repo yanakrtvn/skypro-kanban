@@ -3,7 +3,7 @@ import LoginPage from "../pages/LoginPage/LoginPage";
 import ProtectedRoute from './ProtectedRoute';
 import MainPage from '../pages/MainPage/MainPage';
 import RegisterPage from '../pages/RegisterPage/RegisterPage';
-import CardPage from '../pages/CardPage';
+import CardPage from '../pages/CardPage/CardPage';
 import ExitPage from '../pages/ExitPage/ExitPage';
 import NewCardPage from '../pages/NewCardPage/NewCardPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';

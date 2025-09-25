@@ -11,7 +11,9 @@ import {
   SDateText
 } from "./Card.styled";
 
-function Card({ title, topic, date }) {
+import { Link } from "react-router-dom";
+
+function Card({ title, topic, date, id }) {
   return (
     <SCardItem>
       <SCardContainer>
@@ -26,9 +28,9 @@ function Card({ title, topic, date }) {
           </SCardButton>
         </SCardGroup>
         <SCardContent>
-          <a href="" target="_blank">
+          <Link to={`/card/${id}`} style={{ textDecoration: 'none' }}>
             <SCardTitle>{title}</SCardTitle>
-          </a>
+          </Link>
           <SCardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"
