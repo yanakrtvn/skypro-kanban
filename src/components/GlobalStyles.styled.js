@@ -114,7 +114,7 @@ body {
   display: none;
 }
 
-.pop-user-set:target,
+/* .pop-user-set:target,
 .pop-exit:target,
 .pop-new-card:target,
 .pop-browse:target {
@@ -125,9 +125,9 @@ body {
   position: relative;
   top: 0;
   left: 0;
-}
+} */
 
-.calendar__p {
+/* .calendar__p {
   color: #94A6BE;
   font-size: 10px;
   line-height: 1;
@@ -163,11 +163,11 @@ body {
 ._active-day {
   background-color: #94A6BE;
   color: #FFFFFF;
-}
+} */
 
-._current {
+/* ._current {
   font-weight: 700;
-}
+} */
 
 ._btn-bor {
   border-radius: 4px;

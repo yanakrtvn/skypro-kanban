@@ -1,20 +1,67 @@
 import Card from "../Card/Card.jsx";
-import { SColumnContainer, SColumnTitle, SCardsContainer } from "./Column.styled.js";
+import { useState } from "react";
+import { 
+  SColumnContainer,
+  SColumnTitle,
+  SCardsContainer,
+  SCardCount
+} from "./Column.styled.js";
 
-function Column({ title, cards }) {
+function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+
+  // Обработчик события при перетаскивании над колонкой
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDraggingOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDraggingOver(false);
+  };
+
+  // Обработчик события при отпускании карточки
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingOver(false);
+    
+    const taskId = e.dataTransfer.getData('taskId');
+    if (taskId && onTaskUpdate) {
+      onTaskUpdate(taskId, title); // Обновляем статус задачи
+    }
+  };
+
+  // Функция для форматирования даты
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
   return (
-    <SColumnContainer>
+    <SColumnContainer 
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      $isDraggingOver={isDraggingOver}
+    >
       <SColumnTitle>
         <p>{title}</p>
+        <SCardCount>{cards.length}</SCardCount>
       </SColumnTitle>
       <SCardsContainer>
         {cards.map((card) => (
           <Card
-            key={card.id}
-            id={card.id}
+            key={card._id}
+            id={card._id}
             title={card.title}
             topic={card.topic}
-            date={card.date}
+            date={formatDate(card.date)}
+            onDelete={onTaskDelete}
           />
         ))}
       </SCardsContainer>

@@ -9,12 +9,13 @@ import {
     SExitButtonNo 
 } from './ExitPage.styled';
 
-function ExitPage({ setIsAuth, setUserData, userData }) {
+function ExitPage({ setIsAuth, setUserData, userData, setToken }) {
     const navigate = useNavigate();
 
     const handleExit = () => {
         setIsAuth(false);
         setUserData(null);
+        setToken(null);
         navigate('/login');
     };
 

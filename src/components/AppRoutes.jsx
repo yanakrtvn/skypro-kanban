@@ -8,14 +8,22 @@ import ExitPage from '../pages/ExitPage/ExitPage';
 import NewCardPage from '../pages/NewCardPage/NewCardPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 
-function AppRoutes({ isAuth, setIsAuth, userData, setUserData }) {
+function AppRoutes({ isAuth, setIsAuth, userData, setUserData, setToken, token }) {
     return (
         <Routes>
             <Route path="/login" element={
-                <LoginPage setIsAuth={setIsAuth} setUserData={setUserData} />
+                <LoginPage
+                    setIsAuth={setIsAuth}
+                    setUserData={setUserData}
+                    setToken={setToken}
+                />
             } />
             <Route path="/register" element={
-                <RegisterPage setIsAuth={setIsAuth} setUserData={setUserData} />
+                <RegisterPage
+                    setIsAuth={setIsAuth}
+                    setUserData={setUserData}
+                    setToken={setToken}
+                />
             } />
             
             <Route path="/" element={
@@ -26,7 +34,7 @@ function AppRoutes({ isAuth, setIsAuth, userData, setUserData }) {
       
             <Route path="/card/:id" element={
                 <ProtectedRoute isAuth={isAuth}>
-                    <CardPage userData={userData} />
+                    <CardPage userData={userData} token={token} />
                 </ProtectedRoute>
             } />
 
@@ -38,7 +46,12 @@ function AppRoutes({ isAuth, setIsAuth, userData, setUserData }) {
       
             <Route path="/exit" element={
                 <ProtectedRoute isAuth={isAuth}>
-                    <ExitPage setIsAuth={setIsAuth} setUserData={setUserData} userData={userData} />
+                    <ExitPage
+                        setIsAuth={setIsAuth}
+                        setUserData={setUserData}
+                        setToken={setToken}
+                        userData={userData}
+                    />
                 </ProtectedRoute>
             } />
             

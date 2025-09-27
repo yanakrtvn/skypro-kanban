@@ -33,3 +33,14 @@ export const SLoadingText = styled.p`
   font-size: 18px;
   color: #94A6BE;
 `;
+
+export const SError = styled.div`
+    color: #ff0000;
+    background-color: #ffe6e6;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #ff0000;
+`;

@@ -1,15 +1,35 @@
 import Column from "../../components/Column/Column.jsx";
 import Header from "../../components/Header/Header.jsx";
-import { useState, useEffect } from "react";
-import { cardList } from "../../data.js"; 
-import { SMain, SMainBlock, SMainContent, SLoadingContent, SLoadingText } from "./MainPage.styled";
+import { useState, useEffect, useCallback } from "react"; // Добавили useCallback
+import { kanbanAPI } from "../../services/api.js";
+import { 
+  SMain,
+  SMainBlock,
+  SMainContent,
+  SLoadingContent,
+  SLoadingText,
+  SError
+} from "./MainPage.styled";
 
-function MainPage({ userData }) {
+function MainPage({ userData, token }) {
   const [isLoading, setIsLoading] = useState(true);
   const [columns, setColumns] = useState([]);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  // Обернули loadTasks в useCallback
+  const loadTasks = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+
+      const authToken = token || localStorage.getItem('token');
+      
+      if (!authToken) {
+        throw new Error('Токен авторизации не найден');
+      }
+
+      const tasks = await kanbanAPI.fetchTasks({ token: authToken });
+
       const statuses = [
         "Без статуса",
         "Нужно сделать",
@@ -20,16 +40,68 @@ function MainPage({ userData }) {
 
       const groupedColumns = statuses.map(status => ({
         title: status,
-        cards: cardList.filter(card => card.status === status)
+        cards: Array.isArray(tasks) ? tasks.filter(task => task.status === status) : []
       }));
 
       setColumns(groupedColumns);
+    } catch (error) {
+      setError(error.message);
+      console.error('Ошибка загрузки задач:', error);
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
+  }, [token]);
 
-    return () => clearTimeout(timer);
-  }, []);
-    
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]); // Теперь loadTasks в зависимостях
+
+  // Функция для обновления статуса задачи
+  const updateTaskStatus = async (taskId, newStatus) => {
+    try {
+      const allTasks = columns.flatMap(column => column.cards);
+      const taskToUpdate = allTasks.find(task => task._id === taskId);
+      
+      if (!taskToUpdate) return;
+
+      const authToken = token || localStorage.getItem('token');
+      
+      await kanbanAPI.editTask({
+        id: taskId,
+        token: authToken,
+        task: {
+          userId: taskToUpdate.userId || userData?.id,
+          title: taskToUpdate.title,
+          status: newStatus,
+          description: taskToUpdate.description || "",
+          date: taskToUpdate.date
+        }
+      });
+
+      await loadTasks();
+    } catch (error) {
+      setError(error.message);
+      console.error('Ошибка обновления задачи:', error);
+    }
+  };
+
+  // Функция для удаления задачи
+  const deleteTask = async (taskId) => {
+    try {
+      const authToken = token || localStorage.getItem('token');
+      
+      await kanbanAPI.deleteTask({
+        id: taskId,
+        token: authToken
+      });
+      
+      await loadTasks();
+    } catch (error) {
+      setError(error.message);
+      console.error('Ошибка удаления задачи:', error);
+    }
+  };
+  
   if (isLoading) {
     return (
       <>
@@ -53,9 +125,16 @@ function MainPage({ userData }) {
       <SMain>
         <div className="container">
           <SMainBlock>
+            {error && <SError>{error}</SError>}
             <SMainContent>
-              {columns.map((column, i) => (
-                <Column key={i} title={column.title} cards={column.cards} />
+              {columns.map((column, index) => (
+                <Column
+                  key={index}
+                  title={column.title}
+                  cards={column.cards}
+                  onTaskUpdate={updateTaskStatus}
+                  onTaskDelete={deleteTask}
+                />
               ))}
             </SMainContent>
           </SMainBlock>

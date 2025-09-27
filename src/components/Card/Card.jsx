@@ -8,23 +8,93 @@ import {
   SCardTitle,
   SCardContent,
   SCardDate,
-  SDateText
-} from "./Card.styled";
+  SDateText,
+  SCardDropdownMenu,
+  SCardDropdownItem
+} from "./Card.styled.js";
+import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import { Link } from "react-router-dom";
+function Card({ title, topic, date, id, onDelete }) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
-function Card({ title, topic, date, id }) {
+  // Закрытие dropdown при клике вне его
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Обработчик начала перетаскивания
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData('taskId', id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  // Обработчик клика по кнопке меню
+  const handleMenuClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Обработчик удаления задачи
+  const handleDelete = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
+      onDelete(id);
+    }
+    setIsDropdownOpen(false);
+  };
+
+  // Обработчик редактирования
+  const handleEdit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/card/${id}`);
+    setIsDropdownOpen(false);
+  };
+
   return (
-    <SCardItem>
+    <SCardItem 
+      draggable="true"
+      onDragStart={handleDragStart}
+    >
       <SCardContainer>
         <SCardGroup>
           <SCardTheme $themecolor={topic}>
             <p>{topic}</p>
           </SCardTheme>
-          <SCardButton href="#popBrowse" target="_self">
+          <SCardButton 
+            href="#"
+            onClick={handleMenuClick}
+            ref={dropdownRef}
+          >
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
+            
+            {isDropdownOpen && (
+              <SCardDropdownMenu>
+                <SCardDropdownItem onClick={handleEdit}>
+                  Редактировать
+                </SCardDropdownItem>
+                <SCardDropdownItem onClick={handleDelete} className="delete">
+                  Удалить
+                </SCardDropdownItem>
+              </SCardDropdownMenu>
+            )}
           </SCardButton>
         </SCardGroup>
         <SCardContent>
