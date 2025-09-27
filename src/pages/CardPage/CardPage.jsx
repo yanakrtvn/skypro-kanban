@@ -14,7 +14,6 @@ import {
   SCardPageInput,
   SCardPageSelect,
   SCardPageTextarea,
-  SCardPageBackLink
 } from "./CardPage.styled";
 
 const statuses = [
@@ -145,6 +144,10 @@ function CardPage({ userData, token }) {
     setIsEditing(false);
   };
 
+  const handleClose = () => {
+    navigate('/');
+  };
+
   if (isLoading) {
     return (
       <>
@@ -184,19 +187,25 @@ function CardPage({ userData, token }) {
       <SCardPage>
         <div className="container">
           <SCardPageContainer>
-            <SCardPageBackLink to="/">
-              ← Назад к задачам
-            </SCardPageBackLink>
-            
             {error && <SError>{error}</SError>}
-            
             <SCardPageContent>
               <SCardPageTitle>
-                {isEditing ? "Редактирование задачи" : "Название задачи"}
+                {isEditing ? "Редактирование задачи" : task.title}
               </SCardPageTitle>
 
               {isEditing ? (
                 <SCardPageForm onSubmit={handleSave}>
+                  <div>
+                    <label>Название задачи:</label>
+                    <SCardPageInput
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  
                   <div>
                     <label>Статус:</label>
                     <SCardPageSelect
@@ -209,6 +218,7 @@ function CardPage({ userData, token }) {
                       ))}
                     </SCardPageSelect>
                   </div>
+                  
                   <div>
                     <label>Тема:</label>
                     <SCardPageSelect
@@ -221,8 +231,6 @@ function CardPage({ userData, token }) {
                       ))}
                     </SCardPageSelect>
                   </div>
-
-                  
 
                   <div>
                     <label>Описание задачи:</label>
@@ -244,17 +252,17 @@ function CardPage({ userData, token }) {
                     />
                   </div>
 
-                  <div style={{ flexDirection: 'row', gap: '10px', marginTop: '20px' }}>
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '20px', flexWrap: 'wrap' }}>
                     <SCardPageButton type="submit" style={{ background: '#565EEF', color: 'white' }}>
                       Сохранить
                     </SCardPageButton>
                     <SCardPageButton type="button" onClick={handleCancel} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
                       Отменить
                     </SCardPageButton>
-                    <SCardPageButton type="button" onClick={handleCancel} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
+                    <SCardPageButton type="button" onClick={handleDelete} style={{ background: '#ff4444', color: 'white' }}>
                       Удалить задачу
                     </SCardPageButton>
-                    <SCardPageButton type="button" onClick={handleCancel} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
+                    <SCardPageButton type="button" onClick={handleClose} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
                       Закрыть
                     </SCardPageButton>
                   </div>
@@ -264,21 +272,16 @@ function CardPage({ userData, token }) {
                   <p><strong>Статус:</strong> {task.status}</p>
                   <p><strong>Описание:</strong> {task.description || 'Нет описания'}</p>
                   <p><strong>Тема:</strong> {task.topic}</p>
-                  
-                  
                   <p><strong>Даты:</strong> {new Date(task.date).toLocaleDateString()}</p>
                   
                   <div style={{ display: 'flex', gap: '10px', marginTop: '20px', flexWrap: 'wrap' }}>
                     <SCardPageButton onClick={() => setIsEditing(true)} style={{ background: '#565EEF', color: 'white' }}>
-                      Сохранить
-                    </SCardPageButton>
-                    <SCardPageButton onClick={() => navigate('/')} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
-                      Отменить
+                      Редактировать
                     </SCardPageButton>
                     <SCardPageButton onClick={handleDelete} style={{ background: '#ff4444', color: 'white' }}>
                       Удалить задачу
                     </SCardPageButton>
-                    <SCardPageButton onClick={() => navigate('/')} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
+                    <SCardPageButton onClick={handleClose} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
                       Закрыть
                     </SCardPageButton>
                   </div>

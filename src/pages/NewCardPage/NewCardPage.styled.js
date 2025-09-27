@@ -35,11 +35,17 @@ export const SNewCardLabel = styled.label`
 `;
 
 export const SNewCardInput = styled.input`
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
+    width: 370px;
+    height: 49px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 14;
+    padding: 14px;
+    box-sizing: border-box;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    border-radius: 8px;
 
     &:focus {
         outline: none;
@@ -48,13 +54,17 @@ export const SNewCardInput = styled.input`
 `;
 
 export const SNewCardTextarea = styled.textarea`
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    resize: vertical;
-    min-height: 100px;
+    width: 370px;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 14;
+    padding: 14px;
+    box-sizing: border-box;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    border-radius: 8px;
 
     &:focus {
         outline: none;

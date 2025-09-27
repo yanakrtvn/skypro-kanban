@@ -10,7 +10,6 @@ import {
 function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
-  // Обработчик события при перетаскивании над колонкой
   const handleDragOver = (e) => {
     e.preventDefault();
     setIsDraggingOver(true);
@@ -21,18 +20,16 @@ function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
     setIsDraggingOver(false);
   };
 
-  // Обработчик события при отпускании карточки
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDraggingOver(false);
     
     const taskId = e.dataTransfer.getData('taskId');
     if (taskId && onTaskUpdate) {
-      onTaskUpdate(taskId, title); // Обновляем статус задачи
+      onTaskUpdate(taskId, title);
     }
   };
 
-  // Функция для форматирования даты
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('ru-RU', {

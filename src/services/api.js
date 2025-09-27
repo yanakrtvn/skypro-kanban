@@ -1,14 +1,11 @@
 import axios from "axios";
 
-// Базовые URL
 const KANBAN_API_URL = "https://wedev-api.sky.pro/api/kanban/";
 const USER_API_URL = "https://wedev-api.sky.pro/api/user";
 
-// Глобальная настройка Axios для предотвращения добавления Content-Type
 axios.defaults.headers.put["Content-Type"] = "";
 axios.defaults.headers.post["Content-Type"] = "";
 
-// Интерцептор для обработки ошибок авторизации
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -22,7 +19,6 @@ axios.interceptors.response.use(
   }
 );
 
-// API для задач (Kanban)
 export const kanbanAPI = {
    async fetchTasks({ token }) {
     try {
@@ -32,14 +28,14 @@ export const kanbanAPI = {
         },
       });
       
-      // Обрабатываем разные возможные форматы ответа
+  
       if (Array.isArray(response.data)) {
-        return response.data; // если ответ - массив
+        return response.data;
       } else if (response.data && Array.isArray(response.data.tasks)) {
-        return response.data.tasks; // если ответ - объект с tasks
+        return response.data.tasks;
       } else {
         console.warn("Неожиданный формат ответа:", response.data);
-        return []; // возвращаем пустой массив по умолчанию
+        return [];
       }
     } catch (error) {
       console.error("Ошибка в fetchTasks:", error.response?.data || error.message);
@@ -70,7 +66,6 @@ export const kanbanAPI = {
       },
     });
     
-    // Возвращаем созданную задачу или весь ответ
     return response.data.task || response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || error.message);
@@ -119,7 +114,6 @@ export const kanbanAPI = {
     }
   },
 
-  // Синоним для совместимости
   async fetchTaskById({ id, token }) {
     return this.getTask({ id, token });
   }
@@ -164,7 +158,6 @@ export const authAPI = {
   }
 };
 
-// Экспорт по умолчанию для обратной совместимости
 export default {
   kanbanAPI,
   authAPI

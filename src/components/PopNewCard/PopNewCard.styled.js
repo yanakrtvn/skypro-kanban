@@ -138,7 +138,6 @@ export const SFormNewCreate = styled.button`
   cursor: pointer;
 `;
 
-// Calendar components (аналогичные тем, что в PopBrowse)
 export const SCalendar = styled.div`
   width: 182px;
   margin-bottom: 20px;
@@ -221,7 +220,6 @@ export const SNavAction = styled.div`
   }
 `;
 
-// Categories components
 export const SCategories = styled.div`
   margin-bottom: 20px;
 `;

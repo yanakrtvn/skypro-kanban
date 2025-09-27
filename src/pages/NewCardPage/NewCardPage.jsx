@@ -13,7 +13,6 @@ import {
   SError
 } from "./NewCardPage.styled";
 
-// Выносим константы за пределы компонента
 const statuses = [
   "Без статуса",
   "Нужно сделать",
@@ -35,7 +34,7 @@ function NewCardPage({ userData, token }) {
     topic: topic[0],
     status: statuses[0],
     description: '',
-    date: new Date().toISOString().split('T')[0] // текущая дата по умолчанию
+    date: new Date().toISOString().split('T')[0]
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +52,6 @@ function NewCardPage({ userData, token }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Валидация
     if (!formData.title.trim()) {
       setError('Пожалуйста, введите название задачи');
       return;
@@ -69,7 +67,6 @@ function NewCardPage({ userData, token }) {
         throw new Error('Токен авторизации не найден');
       }
 
-      // Используем правильный метод postTask вместо createTask
       await kanbanAPI.postTask({
         token: authToken,
         task: {
@@ -81,7 +78,6 @@ function NewCardPage({ userData, token }) {
         }
       });
 
-      // Перенаправляем на главную страницу после успешного создания
       navigate('/');
     } catch (error) {
       console.error('Ошибка создания задачи:', error);
@@ -101,13 +97,13 @@ return (
       <SNewCardPage>
         <div className="container">
           <SNewCardContainer>
-            <h2>Создание новой задачи</h2>
+            <h2>Создание задачи</h2>
               
             {error && <SError>{error}</SError>}
               
             <SNewCardForm onSubmit={handleSubmit}>
               <div>
-                <label>Название задачи *</label>
+                <label>Название задачи</label>
                 <SNewCardInput
                   type="text"
                   name="title"
@@ -120,35 +116,7 @@ return (
               </div>
 
               <div>
-                <label>Тема</label>
-                <SNewCardSelect
-                  name="topics"
-                  value={formData.topic}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                >
-                  {topic.map(topic => (
-                    <option key={topic} value={topic}>{topic}</option>
-                  ))}
-                </SNewCardSelect>
-              </div>
-
-              <div>
-                <label>Статус</label>
-                <SNewCardSelect
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                >
-                  {statuses.map(status => (
-                    <option key={status} value={status}>{status}</option>
-                  ))}
-                </SNewCardSelect>
-              </div>
-
-              <div>
-                <label>Описание</label>
+                <label>Описание задачи</label>
                 <SNewCardTextarea
                   name="description"
                   value={formData.description}
@@ -160,7 +128,37 @@ return (
               </div>
 
               <div>
-                <label>Дата выполнения</label>
+  <label>Категория</label>
+  <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+    {topic.map(topicItem => (
+      <button
+        key={topicItem}
+        type="button"
+        onClick={() => handleChange({
+          target: {
+            name: 'topics',
+            value: topicItem
+          }
+        })}
+        disabled={isLoading}
+        style={{
+          padding: '8px 16px',
+          border: '1px solid #ccc',
+          backgroundColor: formData.topic === topicItem ? '#007bff' : '#fff',
+          color: formData.topic === topicItem ? '#fff' : '#000',
+          borderRadius: '4px',
+          cursor: isLoading ? 'not-allowed' : 'pointer',
+          opacity: isLoading ? 0.6 : 1
+        }}
+      >
+        {topicItem}
+      </button>
+    ))}
+  </div>
+</div>
+
+              <div>
+                <label>Даты</label>
                 <SNewCardInput
                   type="date"
                   name="date"

@@ -33,7 +33,6 @@ function LoginPage({ setIsAuth, setUserData, setToken }) {
     const handleLogin = async (e) => {
         e.preventDefault();
         
-        // Валидация
         if (!formData.login.trim() || !formData.password.trim()) {
             setError('Пожалуйста, заполните все поля');
             return;
@@ -48,7 +47,6 @@ function LoginPage({ setIsAuth, setUserData, setToken }) {
                 password: formData.password
             });
 
-            // Сохраняем токен и данные пользователя
             localStorage.setItem('token', response.user.token);
             setToken(response.user.token);
             setIsAuth(true);

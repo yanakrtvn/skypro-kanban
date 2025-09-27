@@ -38,14 +38,12 @@ function RegisterPage({ setIsAuth, setUserData, setToken }) {
         setError('');
 
         try {
-            // Вызываем API регистрации
             const response = await authAPI.register({
                 name: formData.name,
                 login: formData.login,
                 password: formData.password
             });
 
-            // Сохраняем токен и данные пользователя
             setToken(response.user.token);
             setIsAuth(true);
             setUserData({

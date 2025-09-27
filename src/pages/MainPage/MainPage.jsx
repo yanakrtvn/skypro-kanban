@@ -54,9 +54,8 @@ function MainPage({ userData, token }) {
 
   useEffect(() => {
     loadTasks();
-  }, [loadTasks]); // Теперь loadTasks в зависимостях
+  }, [loadTasks]);
 
-  // Функция для обновления статуса задачи
   const updateTaskStatus = async (taskId, newStatus) => {
     try {
       const allTasks = columns.flatMap(column => column.cards);
@@ -85,7 +84,6 @@ function MainPage({ userData, token }) {
     }
   };
 
-  // Функция для удаления задачи
   const deleteTask = async (taskId) => {
     try {
       const authToken = token || localStorage.getItem('token');

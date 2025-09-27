@@ -9,18 +9,15 @@ import {
   SCardContent,
   SCardDate,
   SDateText,
-  SCardDropdownMenu,
-  SCardDropdownItem
 } from "./Card.styled.js";
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function Card({ title, topic, date, id, onDelete }) {
+function Card({ title, topic, date, id }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const dropdownRef = useRef(null);
-  const navigate = useNavigate();
 
-  // Закрытие dropdown при клике вне его
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -34,42 +31,34 @@ function Card({ title, topic, date, id, onDelete }) {
     };
   }, []);
 
-  // Обработчик начала перетаскивания
   const handleDragStart = (e) => {
+    setIsDragging(true);
     e.dataTransfer.setData('taskId', id);
+    e.dataTransfer.setData('taskTopic', topic);
     e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.style.opacity = '0.4';
   };
 
-  // Обработчик клика по кнопке меню
+  const handleDragEnd = (e) => {
+    setIsDragging(false);
+    e.currentTarget.style.opacity = '1';
+  };
+
   const handleMenuClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Обработчик удаления задачи
-  const handleDelete = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
-      onDelete(id);
-    }
-    setIsDropdownOpen(false);
-  };
-
-  // Обработчик редактирования
-  const handleEdit = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    navigate(`/card/${id}`);
-    setIsDropdownOpen(false);
-  };
-
   return (
     <SCardItem 
       draggable="true"
       onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      style={{ 
+        opacity: isDragging ? 0.4 : 1,
+        cursor: 'grab'
+      }}
     >
       <SCardContainer>
         <SCardGroup>
@@ -84,17 +73,7 @@ function Card({ title, topic, date, id, onDelete }) {
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
-            
-            {isDropdownOpen && (
-              <SCardDropdownMenu>
-                <SCardDropdownItem onClick={handleEdit}>
-                  Редактировать
-                </SCardDropdownItem>
-                <SCardDropdownItem onClick={handleDelete} className="delete">
-                  Удалить
-                </SCardDropdownItem>
-              </SCardDropdownMenu>
-            )}
+  
           </SCardButton>
         </SCardGroup>
         <SCardContent>
