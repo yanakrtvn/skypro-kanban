@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { 
   SHeader,
   SHeaderBlock,
@@ -6,51 +6,95 @@ import {
   SHeaderNav,
   SHeaderButton,
   SHeaderUser,
-  SHeaderUserMenu 
+  SHeaderUserMenu,
+  SUserMenuName,
+  SUserMenuEmail,
+  SUserMenuTheme,
+  SUserMenuButton,
 } from "./Header.styled";
 
-function Header() {
+import { Link } from "react-router-dom";
+
+function Header({ userData }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
 
   const userClick = () => {
     setUserMenuOpen(!userMenuOpen);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const userName = userData?.name || "Иван Иванов";
+  const userEmail = userData?.email || "ivan.ivanov@gmail.com";
 
   return (
     <SHeader>
       <div className="container">
         <SHeaderBlock>
           <SHeaderLogo className="_show _light">
-            <a href="" target="_self">
+            <Link to="/">
               <img src="images/logo.png" alt="logo" />
-            </a>
+            </Link>
           </SHeaderLogo>
           <SHeaderLogo className="_dark">
-            <a href="" target="_self">
+            <Link to="/">
               <img src="images/logo_dark.png" alt="logo" />
-            </a>
+            </Link>
           </SHeaderLogo>
           <SHeaderNav>
             <SHeaderButton className="_hover01" id="btnMainNew">
-              <a href="#popNewCard">Создать новую задачу</a>
+              <Link to="/card/new">Создать новую задачу</Link>
             </SHeaderButton>
-            <SHeaderUser className="_hover02" onClick={userClick}>
-              Ivan Ivanov
+            <SHeaderUser 
+              className="_hover02" 
+              onClick={userClick}
+              $active={userMenuOpen}
+            >
+              {userName}
+              <svg 
+                width="12" 
+                height="7" 
+                viewBox="0 0 12 7" 
+                fill="none"
+                style={{ 
+                  marginLeft: '8px',
+                  transform: userMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.3s ease'
+                }}
+              >
+                <path d="M1 1L6 6L11 1" stroke="#94A6BE" strokeWidth="1.5"/>
+              </svg>
             </SHeaderUser>
             <SHeaderUserMenu 
+              ref={userMenuRef}
               className="header__pop-user-set pop-user-set"
               id="user-set-target"
               $visible={userMenuOpen}
             >
-              <p className="pop-user-set__name">Ivan Ivanov</p>
-              <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
-              <div className="pop-user-set__theme">
+              <SUserMenuName>{userName}</SUserMenuName>
+              <SUserMenuEmail>{userEmail}</SUserMenuEmail>
+              <SUserMenuTheme>
                 <p>Темная тема</p>
-                <input type="checkbox" className="checkbox" name="checkbox" />
-              </div>
-              <button type="button" className="_hover03">
-                <a href="#popExit">Выйти</a>
-              </button>
+                <label className="theme-switch">
+                  <input type="checkbox" className="checkbox" name="checkbox" />
+                  <span className="theme-slider"></span>
+                </label>
+              </SUserMenuTheme>
+              <SUserMenuButton type="button" className="_hover03">
+                <Link to="/exit">Выйти</Link>
+              </SUserMenuButton>
             </SHeaderUserMenu>
           </SHeaderNav>
         </SHeaderBlock>

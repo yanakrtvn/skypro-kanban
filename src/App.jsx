@@ -1,19 +1,37 @@
-import PopExit from './components/PopExit/PopExit.jsx';
-import PopNewCard from './components/PopNewCard/PopNewCard.jsx';
-import PopBrowse from './components/PopBrowse/PopBrowse.jsx';
-import Header from './components/Header/Header.jsx';
-import Main from './components/Main/Main.jsx';
+import AppRoutes from './components/AppRoutes';
+import { GlobalStyles } from './components/GlobalStyles.styled';
+import { useState, useEffect } from 'react';
 
 function App() {
-  return (
-    <div className="wrapper">
-      {/* <PopExit />
-      <PopNewCard />
-      <PopBrowse /> */}
-      <Header />
-      <Main />
-    </div>
-  );
+    const [isAuth, setIsAuth] = useState(() => {
+        
+        return JSON.parse(localStorage.getItem('isAuth')) || false;
+    });
+    
+    const [userData, setUserData] = useState(() => {
+        return JSON.parse(localStorage.getItem('userData')) || null;
+    });
+
+
+    useEffect(() => {
+        localStorage.setItem('isAuth', JSON.stringify(isAuth));
+    }, [isAuth]);
+
+    useEffect(() => {
+        localStorage.setItem('userData', JSON.stringify(userData));
+    }, [userData]);
+
+    return (
+        <div className="wrapper">
+            <GlobalStyles />
+            <AppRoutes 
+                isAuth={isAuth}
+                setIsAuth={setIsAuth}
+                userData={userData}
+                setUserData={setUserData}
+            />
+        </div>
+    );
 }
 
 export default App;

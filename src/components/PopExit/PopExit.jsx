@@ -1,25 +1,42 @@
-function popExit() {
+import {
+  SPopExit,
+  SPopExitContainer,
+  SPopExitBlock,
+  SPopExitTtl,
+  SPopExitFormGroup,
+  SPopExitYes,
+  SPopExitNo
+} from "./PopExit.styled.js";
+
+function PopExit({ isOpen, onClose }) {
+  const handleExit = () => {
+    console.log('User exited');
+    onClose();
+  };
+
+  const handleStay = () => {
+    onClose();
+  };
+
   return (
-    <div className="pop-exit" id="popExit">
-      <div className="pop-exit__container">
-        <div className="pop-exit__block">
-          <div className="pop-exit__ttl">
+    <SPopExit className={isOpen ? "active" : ""}>
+      <SPopExitContainer>
+        <SPopExitBlock>
+          <SPopExitTtl>
             <h2>Выйти из аккаунта?</h2>
-          </div>
-          <form className="pop-exit__form" id="formExit" action="#">
-            <div className="pop-exit__form-group">
-              <button className="pop-exit__exit-yes _hover01" id="exitYes">
-                <a href="modal/signin.html">Да, выйти</a>{" "}
-              </button>
-              <button className="pop-exit__exit-no _hover03" id="exitNo">
-                <a href="main.html">Нет, остаться</a>{" "}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+          </SPopExitTtl>
+          <SPopExitFormGroup>
+            <SPopExitYes onClick={handleExit}>
+              Да, выйти
+            </SPopExitYes>
+            <SPopExitNo onClick={handleStay}>
+              Нет, остаться
+            </SPopExitNo>
+          </SPopExitFormGroup>
+        </SPopExitBlock>
+      </SPopExitContainer>
+    </SPopExit>
   );
 }
 
-export default popExit;
+export default PopExit;
