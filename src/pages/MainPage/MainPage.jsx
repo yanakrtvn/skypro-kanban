@@ -1,9 +1,7 @@
 import Column from "../../components/Column/Column.jsx";
-import Header from "../../components/Header/Header.jsx";
-import { useState, useEffect, useCallback } from "react"; // Добавили useCallback
+import { useState, useEffect, useCallback } from "react";
 import { kanbanAPI } from "../../services/api.js";
 import { 
-  SMain,
   SMainBlock,
   SMainContent,
   SLoadingContent,
@@ -16,7 +14,6 @@ function MainPage({ userData, token }) {
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState('');
 
-  // Обернули loadTasks в useCallback
   const loadTasks = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -102,43 +99,29 @@ function MainPage({ userData, token }) {
   
   if (isLoading) {
     return (
-      <>
-        <Header userData={userData}/>
-        <SMain>
-          <div className="container">
-            <SMainBlock>
-              <SLoadingContent>
-                <SLoadingText>Данные загружаются...</SLoadingText>
-              </SLoadingContent>
-            </SMainBlock>
-          </div>
-        </SMain>
-      </>
+      <SMainBlock>
+        <SLoadingContent>
+          <SLoadingText>Данные загружаются...</SLoadingText>
+        </SLoadingContent>
+      </SMainBlock>
     );
   }
 
   return (
-    <>
-      <Header userData={userData}/>
-      <SMain>
-        <div className="container">
-          <SMainBlock>
-            {error && <SError>{error}</SError>}
-            <SMainContent>
-              {columns.map((column, index) => (
-                <Column
-                  key={index}
-                  title={column.title}
-                  cards={column.cards}
-                  onTaskUpdate={updateTaskStatus}
-                  onTaskDelete={deleteTask}
-                />
-              ))}
-            </SMainContent>
-          </SMainBlock>
-        </div>
-      </SMain>
-    </>
+    <SMainBlock>
+      {error && <SError>{error}</SError>}
+      <SMainContent>
+        {columns.map((column, index) => (
+          <Column
+            key={index}
+            title={column.title}
+            cards={column.cards}
+            onTaskUpdate={updateTaskStatus}
+            onTaskDelete={deleteTask}
+          />
+        ))}
+      </SMainContent>
+    </SMainBlock>
   );
 }
 

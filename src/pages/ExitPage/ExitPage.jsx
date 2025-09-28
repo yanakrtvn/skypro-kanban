@@ -1,4 +1,3 @@
-import Header from '../../components/Header/Header.jsx';
 import { useNavigate } from 'react-router-dom';
 import { 
     SExitOverlay, 
@@ -9,7 +8,7 @@ import {
     SExitButtonNo 
 } from './ExitPage.styled';
 
-function ExitPage({ setIsAuth, setUserData, userData, setToken }) {
+function ExitPage({ setIsAuth, setUserData, setToken }) {
     const navigate = useNavigate();
 
     const handleExit = () => {
@@ -25,9 +24,7 @@ function ExitPage({ setIsAuth, setUserData, userData, setToken }) {
 
     return (
         <>
-            <Header userData={userData}/>
             <SExitOverlay />
-            
             <SExitModal>
                 <SExitTitle>Выйти из аккаунта?</SExitTitle>
                 <SExitButtonGroup>

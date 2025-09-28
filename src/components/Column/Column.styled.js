@@ -24,16 +24,6 @@ export const SColumnTitle = styled.div`
     text-transform: uppercase;
   }
 `;
-export const SCardCount = styled.span`
-  display: inline-block;
-  padding: 2px 8px;
-  background-color: #94A6BE;
-  color: #FFFFFF;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-`;
 
 export const SCardsContainer = styled.div`
   width: 100%;

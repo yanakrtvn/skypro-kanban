@@ -4,7 +4,6 @@ import {
   SColumnContainer,
   SColumnTitle,
   SCardsContainer,
-  SCardCount
 } from "./Column.styled.js";
 
 function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
@@ -48,7 +47,6 @@ function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
     >
       <SColumnTitle>
         <p>{title}</p>
-        <SCardCount>{cards.length}</SCardCount>
       </SColumnTitle>
       <SCardsContainer>
         {cards.map((card) => (

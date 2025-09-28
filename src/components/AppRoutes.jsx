@@ -7,6 +7,7 @@ import CardPage from '../pages/CardPage/CardPage';
 import ExitPage from '../pages/ExitPage/ExitPage';
 import NewCardPage from '../pages/NewCardPage/NewCardPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
+import Layout from './Layout/Layout.jsx';
 
 function AppRoutes({ isAuth, setIsAuth, userData, setUserData, setToken, token }) {
     return (
@@ -26,34 +27,22 @@ function AppRoutes({ isAuth, setIsAuth, userData, setUserData, setToken, token }
                 />
             } />
             
-            <Route path="/" element={
+            <Route element={
                 <ProtectedRoute isAuth={isAuth}>
-                    <MainPage userData={userData} />
+                    <Layout userData={userData} />
                 </ProtectedRoute>
-            } />
-      
-            <Route path="/card/:id" element={
-                <ProtectedRoute isAuth={isAuth}>
-                    <CardPage userData={userData} token={token} />
-                </ProtectedRoute>
-            } />
-
-            <Route path="/card/new" element={
-                <ProtectedRoute isAuth={isAuth}>
-                    <NewCardPage userData={userData} />
-                </ProtectedRoute>
-            } />
-      
-            <Route path="/exit" element={
-                <ProtectedRoute isAuth={isAuth}>
+            }>
+                <Route path="/" element={<MainPage userData={userData} />} />
+                <Route path="/card/:id" element={<CardPage userData={userData} token={token} />} />
+                <Route path="/card/new" element={<NewCardPage token={token} />} />
+                <Route path="/exit" element={
                     <ExitPage
                         setIsAuth={setIsAuth}
                         setUserData={setUserData}
                         setToken={setToken}
-                        userData={userData}
                     />
-                </ProtectedRoute>
-            } />
+                } />
+            </Route>
             
             <Route path="*" element={<NotFoundPage />} />
         </Routes>

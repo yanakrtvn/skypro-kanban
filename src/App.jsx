@@ -33,7 +33,7 @@ function App() {
     }, [token]);
 
     return (
-        <div className="wrapper">
+        <div>
             <GlobalStyles />
             <AppRoutes 
                 isAuth={isAuth}

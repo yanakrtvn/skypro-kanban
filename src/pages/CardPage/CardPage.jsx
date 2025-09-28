@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { kanbanAPI } from "../../services/api.js";
-import Header from "../../components/Header/Header.jsx";
 import { 
-  SCardPage,
   SCardPageContainer,
   SCardPageContent,
   SCardPageTitle,
@@ -14,6 +12,7 @@ import {
   SCardPageInput,
   SCardPageSelect,
   SCardPageTextarea,
+  SButtonsGroup
 } from "./CardPage.styled";
 
 const statuses = [
@@ -30,7 +29,7 @@ const topics = [
   "Copywriting",
 ];
 
-function CardPage({ userData, token }) {
+function CardPage({ token }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [task, setTask] = useState(null);
@@ -150,148 +149,127 @@ function CardPage({ userData, token }) {
 
   if (isLoading) {
     return (
-      <>
-        <Header userData={userData} />
-        <SCardPage>
-          <div className="container">
-            <SCardPageContainer>
-              <SLoadingText>Загрузка задачи...</SLoadingText>
-            </SCardPageContainer>
-          </div>
-        </SCardPage>
-      </>
+      <SCardPageContainer>
+        <SLoadingText>Загрузка задачи...</SLoadingText>
+      </SCardPageContainer>
     );
   }
 
   if (!task && !isLoading) {
     return (
-      <>
-        <Header userData={userData} />
-        <SCardPage>
-          <div className="container">
-            <SCardPageContainer>
-              <SError>Задача не найдена</SError>
-              <SCardPageButton onClick={() => navigate('/')}>
-                Вернуться на главную
-              </SCardPageButton>
-            </SCardPageContainer>
-          </div>
-        </SCardPage>
-      </>
+      <SCardPageContainer>
+        <SError>Задача не найдена</SError>
+        <SCardPageButton onClick={() => navigate('/')}>
+          Вернуться на главную
+        </SCardPageButton>
+      </SCardPageContainer>
     );
   }
 
   return (
-    <>
-      <Header userData={userData} />
-      <SCardPage>
-        <div className="container">
-          <SCardPageContainer>
-            {error && <SError>{error}</SError>}
-            <SCardPageContent>
-              <SCardPageTitle>
-                {isEditing ? "Редактирование задачи" : task.title}
-              </SCardPageTitle>
+    <SCardPageContainer>
+      {error && <SError>{error}</SError>}
+      <SCardPageContent>
+        <SCardPageTitle>
+          {isEditing ? "Редактирование задачи" : task.title}
+        </SCardPageTitle>
 
-              {isEditing ? (
-                <SCardPageForm onSubmit={handleSave}>
-                  <div>
-                    <label>Название задачи:</label>
-                    <SCardPageInput
-                      type="text"
-                      name="title"
-                      value={formData.title}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label>Статус:</label>
-                    <SCardPageSelect
-                      name="status"
-                      value={formData.status}
-                      onChange={handleChange}
-                    >
-                      {statuses.map(status => (
-                        <option key={status} value={status}>{status}</option>
-                      ))}
-                    </SCardPageSelect>
-                  </div>
-                  
-                  <div>
-                    <label>Тема:</label>
-                    <SCardPageSelect
-                      name="topic"
-                      value={formData.topic}
-                      onChange={handleChange}
-                    >
-                      {topics.map(topic => (
-                        <option key={topic} value={topic}>{topic}</option>
-                      ))}
-                    </SCardPageSelect>
-                  </div>
+        {isEditing ? (
+          <SCardPageForm onSubmit={handleSave}>
+            <div>
+              <label>Название задачи:</label>
+              <SCardPageInput
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            <div>
+              <label>Статус:</label>
+              <SCardPageSelect
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+              >
+                {statuses.map(status => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </SCardPageSelect>
+            </div>
+            
+            <div>
+              <label>Тема:</label>
+              <SCardPageSelect
+                name="topic"
+                value={formData.topic}
+                onChange={handleChange}
+              >
+                {topics.map(topic => (
+                  <option key={topic} value={topic}>{topic}</option>
+                ))}
+              </SCardPageSelect>
+            </div>
 
-                  <div>
-                    <label>Описание задачи:</label>
-                    <SCardPageTextarea
-                      name="description"
-                      value={formData.description}
-                      onChange={handleChange}
-                      rows="4"
-                    />
-                  </div>
+            <div>
+              <label>Описание задачи:</label>
+              <SCardPageTextarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows="4"
+              />
+            </div>
 
-                  <div>
-                    <label>Даты:</label>
-                    <SCardPageInput
-                      type="date"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleChange}
-                    />
-                  </div>
+            <div>
+              <label>Даты:</label>
+              <SCardPageInput
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+              />
+            </div>
 
-                  <div style={{ display: 'flex', gap: '10px', marginTop: '20px', flexWrap: 'wrap' }}>
-                    <SCardPageButton type="submit" style={{ background: '#565EEF', color: 'white' }}>
-                      Сохранить
-                    </SCardPageButton>
-                    <SCardPageButton type="button" onClick={handleCancel} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
-                      Отменить
-                    </SCardPageButton>
-                    <SCardPageButton type="button" onClick={handleDelete} style={{ background: '#ff4444', color: 'white' }}>
-                      Удалить задачу
-                    </SCardPageButton>
-                    <SCardPageButton type="button" onClick={handleClose} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
-                      Закрыть
-                    </SCardPageButton>
-                  </div>
-                </SCardPageForm>
-              ) : (
-                <div>
-                  <p><strong>Статус:</strong> {task.status}</p>
-                  <p><strong>Описание:</strong> {task.description || 'Нет описания'}</p>
-                  <p><strong>Тема:</strong> {task.topic}</p>
-                  <p><strong>Даты:</strong> {new Date(task.date).toLocaleDateString()}</p>
-                  
-                  <div style={{ display: 'flex', gap: '10px', marginTop: '20px', flexWrap: 'wrap' }}>
-                    <SCardPageButton onClick={() => setIsEditing(true)} style={{ background: '#565EEF', color: 'white' }}>
-                      Редактировать
-                    </SCardPageButton>
-                    <SCardPageButton onClick={handleDelete} style={{ background: '#ff4444', color: 'white' }}>
-                      Удалить задачу
-                    </SCardPageButton>
-                    <SCardPageButton onClick={handleClose} style={{ background: 'transparent', border: '0.7px solid #565EEF', color: '#565EEF' }}>
-                      Закрыть
-                    </SCardPageButton>
-                  </div>
-                </div>
-              )}
-            </SCardPageContent>
-          </SCardPageContainer>
-        </div>
-      </SCardPage>
-    </>
+            <SButtonsGroup>
+              <SCardPageButton type="submit" $primary>
+                Сохранить
+              </SCardPageButton>
+              <SCardPageButton type="button" onClick={handleCancel} $secondary>
+                Отменить
+              </SCardPageButton>
+              <SCardPageButton type="button" onClick={handleDelete} $danger>
+                Удалить задачу
+              </SCardPageButton>
+              <SCardPageButton type="button" onClick={handleClose} $secondary>
+                Закрыть
+              </SCardPageButton>
+            </SButtonsGroup>
+          </SCardPageForm>
+        ) : (
+          <div>
+            <p><strong>Статус:</strong> {task.status}</p>
+            <p><strong>Описание:</strong> {task.description || 'Нет описания'}</p>
+            <p><strong>Тема:</strong> {task.topic}</p>
+            <p><strong>Даты:</strong> {new Date(task.date).toLocaleDateString()}</p>
+            
+            <SButtonsGroup>
+              <SCardPageButton onClick={() => setIsEditing(true)} $primary>
+                Редактировать
+              </SCardPageButton>
+              <SCardPageButton onClick={handleDelete} $danger>
+                Удалить задачу
+              </SCardPageButton>
+              <SCardPageButton onClick={handleClose} $secondary>
+                Закрыть
+              </SCardPageButton>
+            </SButtonsGroup>
+          </div>
+        )}
+      </SCardPageContent>
+    </SCardPageContainer>
   );
 }
 
