@@ -1,20 +1,26 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { authAPI } from '../../services/api';
 import { 
     SRegisterContainer, 
     SRegisterForm, 
     SRegisterInput, 
     SRegisterButton,
-    SRegisterLink 
+    SRegisterLink,
+    SError
 } from "./RegisterPage.styled";
 
-function RegisterPage({ setIsAuth, setUserData }) {
+function RegisterPage({ setIsAuth, setUserData, setToken }) {
     const [formData, setFormData] = useState({
-        username: '',
-        email: '',
+        name: '',
+        login: '',
         password: ''
     });
+
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,22 +28,34 @@ function RegisterPage({ setIsAuth, setUserData }) {
             ...prevState,
             [name]: value
         }));
+
+        if (error) setError('');
     };
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
-        
-        if (formData.username && formData.email && formData.password) {
-            console.log('Регистрация:', formData);
-            
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const response = await authAPI.register({
+                name: formData.name,
+                login: formData.login,
+                password: formData.password
+            });
+
+            setToken(response.user.token);
             setIsAuth(true);
             setUserData({
-                name: formData.username,
-                email: formData.email
+                name: response.user.name,
+                email: response.user.login
             });
+            
             navigate('/');
-        } else {
-            alert('Пожалуйста, заполните все поля');
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -45,25 +63,29 @@ function RegisterPage({ setIsAuth, setUserData }) {
        <SRegisterContainer>
             <h2>Регистрация</h2>
             <SRegisterForm onSubmit={handleRegister}>
+                {error && <SError>{error}</SError>}
+
                 <div>
                     <SRegisterInput
                         type="text"
-                        name="username"
+                        name="name"
                         placeholder="Имя"
-                        value={formData.username}
+                        value={formData.name}
                         onChange={handleChange}
                         required
+                        disabled={isLoading}
                     />
                 </div>
                 
                 <div>
                     <SRegisterInput
-                        type="email"
-                        name="email"
-                        placeholder="Эл.почта"
-                        value={formData.email}
+                        type="text"
+                        name="login"
+                        placeholder="Логин"
+                        value={formData.login}
                         onChange={handleChange}
                         required
+                        disabled={isLoading}
                     />
                 </div>
                 
@@ -75,11 +97,12 @@ function RegisterPage({ setIsAuth, setUserData }) {
                         value={formData.password}
                         onChange={handleChange}
                         required
+                        disabled={isLoading}
                     />
                 </div>
                 
-                <SRegisterButton type="submit">
-                    Зарегистрироваться
+                <SRegisterButton type="submit" disabled={isLoading}>
+                    {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
                 </SRegisterButton>
             </SRegisterForm>
             

@@ -5,6 +5,7 @@ export const SHeader = styled.header`
   margin: 0 auto;
   background-color: #FFFFFF;
   padding: 11px 0;
+
   top: 0;
   left: 0;
   z-index: 1000;
@@ -16,7 +17,7 @@ export const SHeaderBlock = styled.div`
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   position: relative;
 `;
 

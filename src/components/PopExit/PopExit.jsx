@@ -9,6 +9,7 @@ import {
 } from "./PopExit.styled.js";
 
 function PopExit({ isOpen, onClose }) {
+  if (!isOpen) return null;
   const handleExit = () => {
     console.log('User exited');
     onClose();
@@ -19,7 +20,7 @@ function PopExit({ isOpen, onClose }) {
   };
 
   return (
-    <SPopExit className={isOpen ? "active" : ""}>
+    <SPopExit isOpen={isOpen ? "active" : ""}>
       <SPopExitContainer>
         <SPopExitBlock>
           <SPopExitTtl>

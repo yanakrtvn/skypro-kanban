@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { authAPI } from '../../services/api';
 import { 
     SLoginContainer, 
     SLoginForm, 
     SLoginInput, 
     SLoginButton,
-    SLoginLink 
+    SLoginLink,
+    SError
 } from "./LoginPage.styled";
 
-function LoginPage({ setIsAuth, setUserData }) {
+function LoginPage({ setIsAuth, setUserData, setToken }) {
     const [formData, setFormData] = useState({
-        username: '',
+        login: '',
         password: ''
     });
+
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -21,21 +26,40 @@ function LoginPage({ setIsAuth, setUserData }) {
             ...prevState,
             [name]: value
         }));
+
+        if (error) setError('');
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         
-        if (formData.username && formData.password) {
-            setIsAuth(true);
-            
-            setUserData({
-                name: formData.username,
-                email: formData.username 
+        if (!formData.login.trim() || !formData.password.trim()) {
+            setError('Пожалуйста, заполните все поля');
+            return;
+        }
+
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const response = await authAPI.login({
+                login: formData.login.trim(),
+                password: formData.password
             });
+
+            localStorage.setItem('token', response.user.token);
+            setToken(response.user.token);
+            setIsAuth(true);
+            setUserData({
+                name: response.user.name || response.user.login,
+                login: response.user.login
+            });
+            
             navigate('/');
-        } else {
-            alert('Пожалуйста, заполните все поля');
+        } catch (error) {
+            setError(error.message || 'Произошла ошибка при входе');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -43,14 +67,16 @@ function LoginPage({ setIsAuth, setUserData }) {
         <SLoginContainer>
             <h2>Вход</h2>
             <SLoginForm onSubmit={handleLogin}>
+                {error && <SError>{error}</SError>}
                 <div>
                     <SLoginInput
                         type="text"
-                        name="username"
-                        placeholder="Эл.почта"
-                        value={formData.username}
+                        name="login"
+                        placeholder="Логин"
+                        value={formData.login}
                         onChange={handleChange}
                         required
+                        disabled={isLoading}
                     />
                 </div>
                 
@@ -62,11 +88,12 @@ function LoginPage({ setIsAuth, setUserData }) {
                         value={formData.password}
                         onChange={handleChange}
                         required
+                        disabled={isLoading}
                     />
                 </div>
                 
-                <SLoginButton type="submit">
-                    Войти
+                <SLoginButton type="submit" disabled={isLoading}>
+                    {isLoading ? 'Загрузка...' : 'Войти'}
                 </SLoginButton>
             </SLoginForm>
             

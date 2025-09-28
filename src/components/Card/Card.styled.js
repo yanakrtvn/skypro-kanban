@@ -99,3 +99,44 @@ export const SDateText = styled.p`
   color: #94a6be;
   letter-spacing: 0.2px;
 `;
+
+export const SCardDropdown = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+export const SCardDropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 120px;
+  margin-top: 5px;
+`;
+
+export const SCardDropdownItem = styled.button`
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: 12px;
+  color: #333;
+  
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  
+  &.delete {
+    color: #ff0000;
+    
+    &:hover {
+      background-color: #ffe6e6;
+    }
+  }
+`;

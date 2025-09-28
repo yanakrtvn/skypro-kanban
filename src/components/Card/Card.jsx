@@ -8,23 +8,72 @@ import {
   SCardTitle,
   SCardContent,
   SCardDate,
-  SDateText
-} from "./Card.styled";
-
+  SDateText,
+} from "./Card.styled.js";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Card({ title, topic, date, id }) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleDragStart = (e) => {
+    setIsDragging(true);
+    e.dataTransfer.setData('taskId', id);
+    e.dataTransfer.setData('taskTopic', topic);
+    e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.style.opacity = '0.4';
+  };
+
+  const handleDragEnd = (e) => {
+    setIsDragging(false);
+    e.currentTarget.style.opacity = '1';
+  };
+
+  const handleMenuClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   return (
-    <SCardItem>
+    <SCardItem 
+      draggable="true"
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      style={{ 
+        opacity: isDragging ? 0.4 : 1,
+        cursor: 'grab'
+      }}
+    >
       <SCardContainer>
         <SCardGroup>
           <SCardTheme $themecolor={topic}>
             <p>{topic}</p>
           </SCardTheme>
-          <SCardButton href="#popBrowse" target="_self">
+          <SCardButton 
+            href="#"
+            onClick={handleMenuClick}
+            ref={dropdownRef}
+          >
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
+  
           </SCardButton>
         </SCardGroup>
         <SCardContent>

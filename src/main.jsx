@@ -6,10 +6,9 @@ import App from './App.jsx'
 import { GlobalStyles } from './components/GlobalStyles.styled.js'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+
     <BrowserRouter>
     <GlobalStyles />
     <App />
     </BrowserRouter>
-  </StrictMode>,
-)
+    )

@@ -82,3 +82,14 @@ export const SLoginLink = styled(Link)`
         color: #454bc9;
     }
 `;
+
+export const SError = styled.div`
+    color: #ff0000;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #ff0000;
+`;

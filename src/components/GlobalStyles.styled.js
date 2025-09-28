@@ -45,21 +45,7 @@ body {
   height: 100%;
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   color: #000000;
-}
-
-.wrapper {
-  max-width: 100%;
-  width: 100vw;
-  min-height: 100vh;
-  overflow: hidden;
   background-color: #F1F1F1;
-}
-
-.container {
-  max-width: 1260px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 30px;
 }
 
 ._hover01:hover {
@@ -112,61 +98,6 @@ body {
 
 ._dark {
   display: none;
-}
-
-.pop-user-set:target,
-.pop-exit:target,
-.pop-new-card:target,
-.pop-browse:target {
-  display: block;
-}
-
-.pop-wrap {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.calendar__p {
-  color: #94A6BE;
-  font-size: 10px;
-  line-height: 1;
-}
-.calendar__p span {
-  color: #000000;
-}
-
-.calendar__month {
-  color: #94A6BE;
-  font-size: 14px;
-  line-height: 25px;
-  font-weight: 600;
-}
-
-.calendar__day-name {
-  color: #94A6BE;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: -0.2px;
-}
-
-._other-month {
-  opacity: 0;
-}
-
-._cell-day:hover {
-  color: #94A6BE;
-  background-color: #EAEEF6;
-}
-
-._active-day {
-  background-color: #94A6BE;
-  color: #FFFFFF;
-}
-
-._current {
-  font-weight: 700;
 }
 
 ._btn-bor {
@@ -282,21 +213,6 @@ body {
 }
 
 @media screen and (max-width: 495px) {
-  .container {
-    width: 100%;
-    padding: 0 16px;
-  }
-  .header__btn-main-new {
-    z-index: 3;
-    position: fixed;
-    left: 16px;
-    bottom: 30px;
-    top: auto;
-    width: calc(100vw - 32px);
-    height: 40px;
-    border-radius: 4px;
-    margin-right: 0;
-  }
   .pop-new-card__container {
     padding: 0;
     justify-content: flex-start;

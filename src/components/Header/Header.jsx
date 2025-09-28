@@ -41,64 +41,62 @@ function Header({ userData }) {
 
   return (
     <SHeader>
-      <div className="container">
-        <SHeaderBlock>
-          <SHeaderLogo className="_show _light">
-            <Link to="/">
-              <img src="images/logo.png" alt="logo" />
-            </Link>
-          </SHeaderLogo>
-          <SHeaderLogo className="_dark">
-            <Link to="/">
-              <img src="images/logo_dark.png" alt="logo" />
-            </Link>
-          </SHeaderLogo>
-          <SHeaderNav>
-            <SHeaderButton className="_hover01" id="btnMainNew">
-              <Link to="/card/new">Создать новую задачу</Link>
-            </SHeaderButton>
-            <SHeaderUser 
-              className="_hover02" 
-              onClick={userClick}
-              $active={userMenuOpen}
+      <SHeaderBlock>
+        <SHeaderLogo className="_show _light">
+          <Link to="/">
+            <img src="images/logo.png" alt="logo" />
+          </Link>
+        </SHeaderLogo>
+        <SHeaderLogo className="_dark">
+          <Link to="/">
+            <img src="images/logo_dark.png" alt="logo" />
+          </Link>
+        </SHeaderLogo>
+        <SHeaderNav>
+          <SHeaderButton className="_hover01" id="btnMainNew">
+            <Link to="/card/new">Создать новую задачу</Link>
+          </SHeaderButton>
+          <SHeaderUser 
+            className="_hover02" 
+            onClick={userClick}
+            $active={userMenuOpen}
+          >
+            {userName}
+            <svg 
+              width="12" 
+              height="7" 
+              viewBox="0 0 12 7" 
+              fill="none"
+              style={{ 
+                marginLeft: '8px',
+                transform: userMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease'
+              }}
             >
-              {userName}
-              <svg 
-                width="12" 
-                height="7" 
-                viewBox="0 0 12 7" 
-                fill="none"
-                style={{ 
-                  marginLeft: '8px',
-                  transform: userMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.3s ease'
-                }}
-              >
-                <path d="M1 1L6 6L11 1" stroke="#94A6BE" strokeWidth="1.5"/>
-              </svg>
-            </SHeaderUser>
-            <SHeaderUserMenu 
-              ref={userMenuRef}
-              className="header__pop-user-set pop-user-set"
-              id="user-set-target"
-              $visible={userMenuOpen}
-            >
-              <SUserMenuName>{userName}</SUserMenuName>
-              <SUserMenuEmail>{userEmail}</SUserMenuEmail>
-              <SUserMenuTheme>
-                <p>Темная тема</p>
-                <label className="theme-switch">
-                  <input type="checkbox" className="checkbox" name="checkbox" />
-                  <span className="theme-slider"></span>
-                </label>
-              </SUserMenuTheme>
-              <SUserMenuButton type="button" className="_hover03">
-                <Link to="/exit">Выйти</Link>
-              </SUserMenuButton>
-            </SHeaderUserMenu>
-          </SHeaderNav>
-        </SHeaderBlock>
-      </div>
+              <path d="M1 1L6 6L11 1" stroke="#94A6BE" strokeWidth="1.5"/>
+            </svg>
+          </SHeaderUser>
+          <SHeaderUserMenu 
+            ref={userMenuRef}
+            className="header__pop-user-set pop-user-set"
+            id="user-set-target"
+            $visible={userMenuOpen}
+          >
+            <SUserMenuName>{userName}</SUserMenuName>
+            <SUserMenuEmail>{userEmail}</SUserMenuEmail>
+            <SUserMenuTheme>
+              <p>Темная тема</p>
+              <label className="theme-switch">
+                <input type="checkbox" className="checkbox" name="checkbox" />
+                <span className="theme-slider"></span>
+              </label>
+            </SUserMenuTheme>
+            <SUserMenuButton type="button" className="_hover03">
+              <Link to="/exit">Выйти</Link>
+            </SUserMenuButton>
+          </SHeaderUserMenu>
+        </SHeaderNav>
+      </SHeaderBlock>
     </SHeader>
   );
 }

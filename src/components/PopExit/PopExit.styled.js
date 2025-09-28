@@ -1,19 +1,15 @@
 import styled from "styled-components";
 
 export const SPopExit = styled.div`
-  display: none;
+  display: ${props => props.isOpen ? 'block' : 'none'};
   width: 100%;
   height: 100%;
   min-width: 320px;
   min-height: 100vh;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 5;
-
-  &.active {
-    display: block;
-  }
 `;
 
 export const SPopExitContainer = styled.div`
@@ -26,7 +22,6 @@ export const SPopExitContainer = styled.div`
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
 `;
 
 export const SPopExitBlock = styled.div`
