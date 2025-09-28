@@ -1,55 +1,50 @@
-import Column from "../Column/Column.jsx";
+import Column from "../../components/Column/Column.jsx";
 import { useState, useEffect } from "react";
-import { cardList } from "../../data.js"; 
+import { useTasks } from "../../contexts/TaskContext";
 import { SMain, SMainBlock, SMainContent, SLoadingContent, SLoadingText } from "./Main.styled.js";
 
 function Main() {
   const [isLoading, setIsLoading] = useState(true);
-  const [columns, setColumns] = useState([]);
+  const { loadTasks } = useTasks();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const statuses = [
-        "Без статуса",
-        "Нужно сделать",
-        "В работе",
-        "Тестирование",
-        "Готово",
-      ];
-
-      const groupedColumns = statuses.map(status => ({
-        title: status,
-        cards: cardList.filter(card => card.status === status)
-      }));
-
-      setColumns(groupedColumns);
+    const initializeData = async () => {
+      await loadTasks();
       setIsLoading(false);
-    }, 2000);
+    };
 
-    return () => clearTimeout(timer);
-  }, []);
-    
-if (isLoading) {
+    initializeData();
+  }, [loadTasks]);
+
+  const statuses = [
+    "Без статуса",
+    "Нужно сделать",
+    "В работе",
+    "Тестирование",
+    "Готово",
+  ];
+
+  if (isLoading) {
+    return (
+      <SMain>
+        <div className="container">
+          <SMainBlock>
+            <SLoadingContent>
+              <SLoadingText>Данные загружаются...</SLoadingText>
+            </SLoadingContent>
+          </SMainBlock>
+        </div>
+      </SMain>
+    );
+  }
+
   return (
     <SMain>
       <div className="container">
         <SMainBlock>
-          <SLoadingContent>
-            <SLoadingText>Данные загружаются...</SLoadingText>
-          </SLoadingContent>
-          </SMainBlock>
-      </div>
-    </SMain>
-  );
-}
-
-return (
-    <SMain>
-      <div className="container">
-        <SMainBlock>
           <SMainContent>
-            {columns.map((column, i) => (
-              <Column key={i} title={column.title} cards={column.cards} />
+            {statuses.map((status, i) => (
+              <Column key={i} title={status} />
             ))}
           </SMainContent>
         </SMainBlock>

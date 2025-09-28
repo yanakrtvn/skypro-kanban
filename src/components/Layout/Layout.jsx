@@ -23,10 +23,10 @@ const Container = styled.div`
   }
 `;
 
-export const Layout = ({ userData }) => {
+export const Layout = () => {
   return (
     <LayoutWrapper>
-      <Header userData={userData} />
+      <Header />
       <SMain>
         <Container>
           <Outlet />

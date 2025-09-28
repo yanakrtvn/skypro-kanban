@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
     SExitOverlay, 
     SExitModal, 
@@ -8,13 +9,12 @@ import {
     SExitButtonNo 
 } from './ExitPage.styled';
 
-function ExitPage({ setIsAuth, setUserData, setToken }) {
+function ExitPage() {
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const handleExit = () => {
-        setIsAuth(false);
-        setUserData(null);
-        setToken(null);
+        logout();
         navigate('/login');
     };
 

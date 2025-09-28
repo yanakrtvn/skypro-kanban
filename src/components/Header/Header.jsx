@@ -12,12 +12,13 @@ import {
   SUserMenuTheme,
   SUserMenuButton,
 } from "./Header.styled";
-
 import { Link } from "react-router-dom";
+import { useAuth } from '../../contexts/AuthContext';
 
-function Header({ userData }) {
+function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
+  const { userData } = useAuth();
 
   const userClick = () => {
     setUserMenuOpen(!userMenuOpen);
@@ -35,6 +36,11 @@ function Header({ userData }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleLogoutClick = (e) => {
+    e.preventDefault();
+    setUserMenuOpen(false);
+  };
 
   const userName = userData?.name || "Иван Иванов";
   const userEmail = userData?.email || "ivan.ivanov@gmail.com";
@@ -91,7 +97,11 @@ function Header({ userData }) {
                 <span className="theme-slider"></span>
               </label>
             </SUserMenuTheme>
-            <SUserMenuButton type="button" className="_hover03">
+            <SUserMenuButton 
+              type="button" 
+              className="_hover03"
+              onClick={handleLogoutClick}
+            >
               <Link to="/exit">Выйти</Link>
             </SUserMenuButton>
           </SHeaderUserMenu>

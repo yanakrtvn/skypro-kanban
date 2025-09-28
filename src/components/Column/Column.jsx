@@ -5,9 +5,13 @@ import {
   SColumnTitle,
   SCardsContainer,
 } from "./Column.styled.js";
+import { useTasks } from '../../contexts/TaskContext';
 
-function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
+function Column({ title }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const { tasks, updateTask, deleteTask } = useTasks();
+
+  const filteredTasks = tasks.filter(task => task.status === title);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -24,8 +28,8 @@ function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
     setIsDraggingOver(false);
     
     const taskId = e.dataTransfer.getData('taskId');
-    if (taskId && onTaskUpdate) {
-      onTaskUpdate(taskId, title);
+    if (taskId) {
+      updateTask(taskId, { status: title });
     }
   };
 
@@ -36,6 +40,10 @@ function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
       month: '2-digit',
       year: 'numeric'
     });
+  };
+
+  const handleDeleteTask = (taskId) => {
+    deleteTask(taskId);
   };
 
   return (
@@ -49,14 +57,14 @@ function Column({ title, cards, onTaskUpdate, onTaskDelete }) {
         <p>{title}</p>
       </SColumnTitle>
       <SCardsContainer>
-        {cards.map((card) => (
+        {filteredTasks.map((card) => (
           <Card
             key={card._id}
             id={card._id}
             title={card.title}
             topic={card.topic}
             date={formatDate(card.date)}
-            onDelete={onTaskDelete}
+            onDelete={handleDeleteTask}
           />
         ))}
       </SCardsContainer>

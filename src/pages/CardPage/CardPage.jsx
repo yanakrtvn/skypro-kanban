@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { kanbanAPI } from "../../services/api.js";
+import { useAuth } from "../../contexts/AuthContext";
 import { 
   SCardPageContainer,
   SCardPageContent,
@@ -29,9 +30,10 @@ const topics = [
   "Copywriting",
 ];
 
-function CardPage({ token }) {
+function CardPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [task, setTask] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
