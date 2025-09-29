@@ -1,5 +1,5 @@
 import Column from "../../components/Column/Column.jsx";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useTasks } from "../../contexts/TaskContext";
 import { 
   SMainBlock,
@@ -10,11 +10,9 @@ import {
 } from "./MainPage.styled";
 
 function MainPage() {
-  const [localLoading, setLocalLoading] = useState(true);
-  const [localError, setLocalError] = useState('');
-  
   const { 
     tasks, 
+    isLoading, 
     error, 
     loadTasks 
   } = useTasks();
@@ -28,27 +26,12 @@ function MainPage() {
   ];
 
   useEffect(() => {
-    const initializeData = async () => {
-      try {
-        setLocalLoading(true);
-        setLocalError('');
-        await loadTasks();
-      } catch (error) {
-        setLocalError(error.message);
-      } finally {
-        setLocalLoading(false);
-      }
-    };
+    if (tasks.length === 0 && !isLoading) {
+      loadTasks();
+    }
+  }, [tasks.length, isLoading, loadTasks]);
 
-    initializeData();
-  }, []);
-
-  const columns = statuses.map(status => ({
-    title: status,
-    cards: Array.isArray(tasks) ? tasks.filter(task => task.status === status) : []
-  }));
-
-  if (localLoading) {
+  if (isLoading) {
     return (
       <SMainBlock>
         <SLoadingContent>
@@ -60,19 +43,15 @@ function MainPage() {
 
   return (
     <SMainBlock>
-      {(error || localError) && (
+      {error && (
         <SError>
-          {error || localError}
+          {error}
         </SError>
       )}
       
       <SMainContent>
-        {columns.map((column, index) => (
-          <Column
-            key={index}
-            title={column.title}
-            cards={column.cards}
-          />
+        {statuses.map((status, i) => (
+          <Column key={i} title={status} />
         ))}
       </SMainContent>
     </SMainBlock>

@@ -1,7 +1,7 @@
 import AppRoutes from './components/AppRoutes.jsx';
 import { GlobalStyles } from './components/GlobalStyles.styled.js';
-import { AuthProvider } from './contexts/AuthProvider';
-import { TaskProvider } from './contexts/TaskProvider';
+import { AuthProvider } from './contexts/AuthProvider.jsx';
+import { TaskProvider } from './contexts/TaskProvider.jsx';
 
 function App() {
     return (

@@ -8,6 +8,8 @@ export const TaskProvider = ({ children }) => {
     const [error, setError] = useState(null);
 
     const loadTasks = useCallback(async () => {
+        if (isLoading) return;
+        
         try {
             setIsLoading(true);
             setError(null);
@@ -27,7 +29,7 @@ export const TaskProvider = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [isLoading]);
 
     const addTask = async (taskData) => {
         try {
@@ -68,14 +70,14 @@ export const TaskProvider = ({ children }) => {
             }
 
             const updatePayload = {
-                title: currentTask.title,
-                topic: currentTask.topic,
+                title: updatedData.title || currentTask.title,
+                topic: updatedData.topic || currentTask.topic,
                 status: updatedData.status || currentTask.status,
-                description: currentTask.description || "Описание задачи",
-                date: currentTask.date
+                description: updatedData.description || currentTask.description || "Описание задачи",
+                date: updatedData.date || currentTask.date
             };
 
-            const updatedTask = await kanbanAPI.editTask({
+            await kanbanAPI.editTask({
                 id: taskId,
                 token,
                 task: updatePayload
@@ -84,7 +86,6 @@ export const TaskProvider = ({ children }) => {
             setTasks(prev => prev.map(task => 
                 task._id === taskId ? { ...task, ...updatedData } : task
             ));
-            return updatedTask;
             
         } catch (error) {
             setError(error.message);
@@ -116,6 +117,10 @@ export const TaskProvider = ({ children }) => {
         }
     };
 
+    const getTaskById = useCallback((taskId) => {
+        return tasks.find(task => task._id === taskId);
+    }, [tasks]);
+
     const value = {
         tasks,
         isLoading,
@@ -123,7 +128,8 @@ export const TaskProvider = ({ children }) => {
         loadTasks,
         addTask,
         updateTask,
-        deleteTask
+        deleteTask,
+        getTaskById
     };
 
     return (
