@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const SPopNewCard = styled.div`
-  display: ${props => props.isOpen ? 'block' : 'none'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
   width: 100%;
   min-width: 375px;
   height: 100%;

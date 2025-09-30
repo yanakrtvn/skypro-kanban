@@ -8,10 +8,13 @@ import {
   SPopExitNo
 } from "./PopExit.styled.js";
 
-function PopExit({ isOpen, onClose }) {
-  if (!isOpen) return null;
+function PopExit({ $isOpen, onClose, onConfirm }) {
+  if (!$isOpen) return null;
+  
   const handleExit = () => {
-    console.log('User exited');
+    if (onConfirm) {
+      onConfirm();
+    }
     onClose();
   };
 
@@ -20,7 +23,7 @@ function PopExit({ isOpen, onClose }) {
   };
 
   return (
-    <SPopExit isOpen={isOpen ? "active" : ""}>
+    <SPopExit $isOpen={$isOpen}>
       <SPopExitContainer>
         <SPopExitBlock>
           <SPopExitTtl>

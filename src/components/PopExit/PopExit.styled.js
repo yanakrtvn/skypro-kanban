@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const SPopExit = styled.div`
-  display: ${props => props.isOpen ? 'block' : 'none'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
   width: 100%;
   height: 100%;
   min-width: 320px;

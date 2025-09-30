@@ -15,7 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import { useAuth } from '../../contexts/AuthContext';
 
-function Header() {
+function Header({ onNewCardClick, onExitClick }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
   const { userData } = useAuth();
@@ -37,9 +37,19 @@ function Header() {
     };
   }, []);
 
-  const handleLogoutClick = (e) => {
+  const handleNewCardClick = (e) => {
+    e.preventDefault();
+    if (onNewCardClick) {
+      onNewCardClick();
+    }
+  };
+
+  const handleExitClick = (e) => {
     e.preventDefault();
     setUserMenuOpen(false);
+    if (onExitClick) {
+      onExitClick();
+    }
   };
 
   const userName = userData?.name || "Иван Иванов";
@@ -59,8 +69,12 @@ function Header() {
           </Link>
         </SHeaderLogo>
         <SHeaderNav>
-          <SHeaderButton className="_hover01" id="btnMainNew">
-            <Link to="/card/new">Создать новую задачу</Link>
+          <SHeaderButton 
+            className="_hover01" 
+            id="btnMainNew"
+            onClick={handleNewCardClick}
+          >
+            <a href="#" onClick={handleNewCardClick}>Создать новую задачу</a>
           </SHeaderButton>
           <SHeaderUser 
             className="_hover02" 
@@ -100,9 +114,9 @@ function Header() {
             <SUserMenuButton 
               type="button" 
               className="_hover03"
-              onClick={handleLogoutClick}
+              onClick={handleExitClick}
             >
-              <Link to="/exit">Выйти</Link>
+              <a href="#" onClick={handleExitClick}>Выйти</a>
             </SUserMenuButton>
           </SHeaderUserMenu>
         </SHeaderNav>

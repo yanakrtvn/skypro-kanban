@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { useTasks } from "../../contexts/TaskContext";
 import {
   SPopBrowse,
   SPopBrowseContainer,
@@ -16,14 +18,14 @@ import {
   SCalendar,
   SCalendarTtl,
   SCalendarBlock,
-  SCalendarContent,
-  SCalendarDaysNames,
-  SCalendarCells,
-  SCalendarCell,
-  SCalendarNav,
+  // SCalendarContent,
+  // SCalendarDaysNames,
+  // SCalendarCells,
+  // SCalendarCell,
+  // SCalendarNav,
   SCalendarPeriod,
-  SNavActions,
-  SNavAction,
+  // SNavActions,
+  // SNavAction,
   SCategories,
   SCategoriesP,
   SCategoriesTheme,
@@ -31,58 +33,228 @@ import {
   SPopBrowseBtnEdit
 } from "./PopBrowse.styled.js";
 
-function PopBrowse({ isOpen, onClose }) {
-  if (!isOpen) return null;
+function PopBrowse({ isOpen, onClose, taskId }) {
+  const { getTaskById, updateTask, deleteTask } = useTasks();
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const task = taskId ? getTaskById(taskId) : null;
+
+  useEffect(() => {
+    if (task) {
+      setFormData({
+        title: task.title || '',
+        topic: task.topic || 'Web Design',
+        status: task.status || 'Без статуса',
+        description: task.description || '',
+        date: task.date ? new Date(task.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+      });
+    }
+  }, [task]);
+
+  if (!isOpen || !task) return null;
 
   const handleClose = (e) => {
     e.preventDefault();
+    setIsEditing(false);
+    setError('');
     onClose();
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleStatusChange = (status) => {
+    setFormData(prev => ({
+      ...prev,
+      status
+    }));
+  };
+
+  const handleTopicChange = (topic) => {
+    setFormData(prev => ({
+      ...prev,
+      topic
+    }));
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.title.trim() || !formData.description.trim()) {
+      setError('Заполните все обязательные поля');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      await updateTask(taskId, {
+        title: formData.title.trim(),
+        topic: formData.topic,
+        status: formData.status,
+        description: formData.description.trim(),
+        date: formData.date
+      });
+
+      setIsEditing(false);
+    } catch (error) {
+      setError(error.message || 'Ошибка при сохранении задачи');
+      console.error('Ошибка сохранения задачи:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
+      setIsLoading(true);
+      try {
+        await deleteTask(taskId);
+        onClose();
+      } catch (error) {
+        setError(error.message || 'Ошибка при удалении задачи');
+        console.error('Ошибка удаления задачи:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setFormData({
+      title: task.title || '',
+      topic: task.topic || 'Web Design',
+      status: task.status || 'Без статуса',
+      description: task.description || '',
+      date: task.date ? new Date(task.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+    });
+    setIsEditing(false);
+    setError('');
+  };
+
+  const statuses = [
+    "Без статуса",
+    "Нужно сделать", 
+    "В работе",
+    "Тестирование",
+    "Готово",
+  ];
+
+  const topics = ["Web Design", "Research", "Copywriting"];
+
+  const getTopicClass = (topic) => {
+    switch (topic) {
+      case 'Web Design': return '_orange';
+      case 'Research': return '_green';
+      case 'Copywriting': return '_purple';
+      default: return '_orange';
+    }
+  };
+
   return (
-    <SPopBrowse isOpen={isOpen}>
+    <SPopBrowse $isOpen={isOpen}>
       <SPopBrowseContainer>
         <SPopBrowseBlock>
           <SPopBrowseContent>
+            {error && (
+              <div style={{ color: 'red', marginBottom: '15px', textAlign: 'center' }}>
+                {error}
+              </div>
+            )}
+
             <SPopBrowseTopBlock>
-              <SPopBrowseTtl>Название задачи</SPopBrowseTtl>
-              <SCategoriesTheme className="_orange _active-category">
-                <p className="_orange">Web Design</p>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="title"
+                  value={formData?.title || ''}
+                  onChange={handleInputChange}
+                  disabled={isLoading}
+                  style={{
+                    border: 'none',
+                    background: 'transparent',
+                    fontSize: 'inherit',
+                    fontWeight: 'inherit',
+                    color: 'inherit',
+                    width: '100%',
+                    outline: 'none'
+                  }}
+                />
+              ) : (
+                <SPopBrowseTtl>{task.title}</SPopBrowseTtl>
+              )}
+              <SCategoriesTheme className={`${getTopicClass(task.topic)} _active-category`}>
+                <p className={getTopicClass(task.topic)}>
+                  {isEditing ? (
+                    <select
+                      value={formData?.topic || 'Web Design'}
+                      onChange={(e) => handleTopicChange(e.target.value)}
+                      disabled={isLoading}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        color: 'inherit',
+                        outline: 'none'
+                      }}
+                    >
+                      {topics.map(topicItem => (
+                        <option key={topicItem} value={topicItem}>{topicItem}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    task.topic
+                  )}
+                </p>
               </SCategoriesTheme>
             </SPopBrowseTopBlock>
             
             <SStatus>
               <SStatusP className="subttl">Статус</SStatusP>
               <SStatusThemes>
-                <SStatusTheme className="_hide">
-                  <p>Без статуса</p>
-                </SStatusTheme>
-                <SStatusTheme className="_gray">
-                  <p className="_gray">Нужно сделать</p>
-                </SStatusTheme>
-                <SStatusTheme className="_hide">
-                  <p>В работе</p>
-                </SStatusTheme>
-                <SStatusTheme className="_hide">
-                  <p>Тестирование</p>
-                </SStatusTheme>
-                <SStatusTheme className="_hide">
-                  <p>Готово</p>
-                </SStatusTheme>
+                {statuses.map((statusItem) => (
+                  <SStatusTheme 
+                    key={statusItem}
+                    className={isEditing ? 
+                      (formData?.status === statusItem ? '_gray' : '_hide') : 
+                      (task.status === statusItem ? '_gray' : '_hide')
+                    }
+                    onClick={() => isEditing && !isLoading && handleStatusChange(statusItem)}
+                    style={{ 
+                      cursor: isEditing && !isLoading ? 'pointer' : 'default'
+                    }}
+                  >
+                    <p className={isEditing && formData?.status === statusItem ? '_gray' : ''}>
+                      {statusItem}
+                    </p>
+                  </SStatusTheme>
+                ))}
               </SStatusThemes>
             </SStatus>
             
             <SPopBrowseWrap>
-              <SFormBrowse id="formBrowseCard" action="#">
+              <SFormBrowse id="formBrowseCard" onSubmit={handleSave}>
                 <SFormBrowseBlock>
                   <label htmlFor="textArea01" className="subttl">
                     Описание задачи
                   </label>
                   <SFormBrowseArea
-                    name="text"
+                    name="description"
                     id="textArea01"
-                    readOnly
+                    value={formData?.description || ''}
+                    onChange={handleInputChange}
+                    readOnly={!isEditing}
                     placeholder="Введите описание задачи..."
+                    disabled={isLoading}
                   ></SFormBrowseArea>
                 </SFormBrowseBlock>
               </SFormBrowse>
@@ -90,75 +262,28 @@ function PopBrowse({ isOpen, onClose }) {
               <SCalendar>
                 <SCalendarTtl className="subttl">Даты</SCalendarTtl>
                 <SCalendarBlock>
-                  <SCalendarNav>
-                    <div className="calendar__month">Сентябрь 2023</div>
-                    <SNavActions>
-                      <SNavAction data-action="prev">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="6" height="11" viewBox="0 0 6 11">
-                          <path d="M5.72945 1.95273C6.09018 1.62041 6.09018 1.0833 5.72945 0.750969C5.36622 0.416344 4.7754 0.416344 4.41218 0.750969L0.528487 4.32883C-0.176162 4.97799 -0.176162 6.02201 0.528487 6.67117L4.41217 10.249C4.7754 10.5837 5.36622 10.5837 5.72945 10.249C6.09018 9.9167 6.09018 9.37959 5.72945 9.04727L1.87897 5.5L5.72945 1.95273Z" />
-                        </svg>
-                      </SNavAction>
-                      <SNavAction data-action="next">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="6" height="11" viewBox="0 0 6 11">
-                          <path d="M0.27055 9.04727C-0.0901833 9.37959 -0.0901832 9.9167 0.27055 10.249C0.633779 10.5837 1.2246 10.5837 1.58783 10.249L5.47151 6.67117C6.17616 6.02201 6.17616 4.97799 5.47151 4.32883L1.58782 0.75097C1.2246 0.416344 0.633778 0.416344 0.270549 0.75097C-0.0901831 1.0833 -0.090184 1.62041 0.270549 1.95273L4.12103 5.5L0.27055 9.04727Z" />
-                        </svg>
-                      </SNavAction>
-                    </SNavActions>
-                  </SCalendarNav>
-                  
-                  <SCalendarContent>
-                    <SCalendarDaysNames>
-                      <div className="calendar__day-name">пн</div>
-                      <div className="calendar__day-name">вт</div>
-                      <div className="calendar__day-name">ср</div>
-                      <div className="calendar__day-name">чт</div>
-                      <div className="calendar__day-name">пт</div>
-                      <div className="calendar__day-name -weekend-">сб</div>
-                      <div className="calendar__day-name -weekend-">вс</div>
-                    </SCalendarDaysNames>
-                    <SCalendarCells>
-                      <SCalendarCell className="_other-month">28</SCalendarCell>
-                      <SCalendarCell className="_other-month">29</SCalendarCell>
-                      <SCalendarCell className="_other-month">30</SCalendarCell>
-                      <SCalendarCell className="_cell-day">31</SCalendarCell>
-                      <SCalendarCell className="_cell-day">1</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend">2</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend">3</SCalendarCell>
-                      <SCalendarCell className="_cell-day">4</SCalendarCell>
-                      <SCalendarCell className="_cell-day">5</SCalendarCell>
-                      <SCalendarCell className="_cell-day ">6</SCalendarCell>
-                      <SCalendarCell className="_cell-day">7</SCalendarCell>
-                      <SCalendarCell className="_cell-day _current">8</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend _active-day">9</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend">10</SCalendarCell>
-                      <SCalendarCell className="_cell-day">11</SCalendarCell>
-                      <SCalendarCell className="_cell-day">12</SCalendarCell>
-                      <SCalendarCell className="_cell-day">13</SCalendarCell>
-                      <SCalendarCell className="_cell-day">14</SCalendarCell>
-                      <SCalendarCell className="_cell-day">15</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend">16</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend">17</SCalendarCell>
-                      <SCalendarCell className="_cell-day">18</SCalendarCell>
-                      <SCalendarCell className="_cell-day">19</SCalendarCell>
-                      <SCalendarCell className="_cell-day">20</SCalendarCell>
-                      <SCalendarCell className="_cell-day">21</SCalendarCell>
-                      <SCalendarCell className="_cell-day">22</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend">23</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend">24</SCalendarCell>
-                      <SCalendarCell className="_cell-day">25</SCalendarCell>
-                      <SCalendarCell className="_cell-day">26</SCalendarCell>
-                      <SCalendarCell className="_cell-day">27</SCalendarCell>
-                      <SCalendarCell className="_cell-day">28</SCalendarCell>
-                      <SCalendarCell className="_cell-day">29</SCalendarCell>
-                      <SCalendarCell className="_cell-day _weekend">30</SCalendarCell>
-                      <SCalendarCell className="_other-month _weekend">1</SCalendarCell>
-                    </SCalendarCells>
-                  </SCalendarContent>
-
-                  <input type="hidden" id="datepick_value" value="08.09.2023" />
                   <SCalendarPeriod>
                     <p className="calendar__p date-end">
-                      Срок исполнения: <span className="date-control">09.09.23</span>
+                      Срок исполнения:{" "}
+                      {isEditing ? (
+                        <input 
+                          type="date" 
+                          name="date"
+                          value={formData?.date || ''}
+                          onChange={handleInputChange}
+                          disabled={isLoading}
+                          style={{ 
+                            border: 'none', 
+                            background: 'transparent',
+                            color: 'inherit',
+                            font: 'inherit'
+                          }}
+                        />
+                      ) : (
+                        <span className="date-control">
+                          {task.date ? new Date(task.date).toLocaleDateString('ru-RU') : 'Не указано'}
+                        </span>
+                      )}
                     </p>
                   </SCalendarPeriod>
                 </SCalendarBlock>
@@ -167,39 +292,88 @@ function PopBrowse({ isOpen, onClose }) {
             
             <SCategories className="theme-down">
               <SCategoriesP className="subttl">Категория</SCategoriesP>
-              <SCategoriesTheme className="_orange _active-category">
-                <p className="_orange">Web Design</p>
+              <SCategoriesTheme className={`${getTopicClass(task.topic)} _active-category`}>
+                <p className={getTopicClass(task.topic)}>
+                  {isEditing ? (
+                    <select
+                      value={formData?.topic || 'Web Design'}
+                      onChange={(e) => handleTopicChange(e.target.value)}
+                      disabled={isLoading}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        color: 'inherit',
+                        outline: 'none'
+                      }}
+                    >
+                      {topics.map(topicItem => (
+                        <option key={topicItem} value={topicItem}>{topicItem}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    task.topic
+                  )}
+                </p>
               </SCategoriesTheme>
             </SCategories>
             
-            <SPopBrowseBtnBrowse>
+            <SPopBrowseBtnBrowse style={{ display: isEditing ? 'none' : 'flex' }}>
               <div className="btn-group">
-                <button className="btn-browse__edit _btn-bor _hover03">
-                  <a href="#">Редактировать задачу</a>
+                <button 
+                  className="btn-browse__edit _btn-bor _hover03"
+                  onClick={() => setIsEditing(true)}
+                  disabled={isLoading}
+                >
+                  Редактировать задачу
                 </button>
-                <button className="btn-browse__delete _btn-bor _hover03">
-                  <a href="#">Удалить задачу</a>
+                <button 
+                  className="btn-browse__delete _btn-bor _hover03"
+                  onClick={handleDelete}
+                  disabled={isLoading}
+                >
+                  Удалить задачу
                 </button>
               </div>
-              <button className="btn-browse__close _btn-bg _hover01" onClick={handleClose}>
-                <a href="#">Закрыть</a>
+              <button 
+                className="btn-browse__close _btn-bg _hover01" 
+                onClick={handleClose}
+                disabled={isLoading}
+              >
+                Закрыть
               </button>
             </SPopBrowseBtnBrowse>
             
-            <SPopBrowseBtnEdit className="_hide">
+            <SPopBrowseBtnEdit style={{ display: isEditing ? 'flex' : 'none' }}>
               <div className="btn-group">
-                <button className="btn-edit__edit _btn-bg _hover01">
-                  <a href="#">Сохранить</a>
+                <button 
+                  className="btn-edit__edit _btn-bg _hover01"
+                  type="submit"
+                  form="formBrowseCard"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Сохранение...' : 'Сохранить'}
                 </button>
-                <button className="btn-edit__edit _btn-bor _hover03">
-                  <a href="#">Отменить</a>
+                <button 
+                  className="btn-edit__edit _btn-bor _hover03"
+                  onClick={handleCancelEdit}
+                  disabled={isLoading}
+                >
+                  Отменить
                 </button>
-                <button className="btn-edit__delete _btn-bor _hover03" id="btnDelete">
-                  <a href="#">Удалить задачу</a>
+                <button 
+                  className="btn-edit__delete _btn-bor _hover03" 
+                  onClick={handleDelete}
+                  disabled={isLoading}
+                >
+                  Удалить задачу
                 </button>
               </div>
-              <button className="btn-edit__close _btn-bg _hover01" onClick={handleClose}>
-                <a href="#">Закрыть</a>
+              <button 
+                className="btn-edit__close _btn-bg _hover01" 
+                onClick={handleClose}
+                disabled={isLoading}
+              >
+                Закрыть
               </button>
             </SPopBrowseBtnEdit>
           </SPopBrowseContent>

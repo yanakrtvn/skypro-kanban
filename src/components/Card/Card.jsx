@@ -13,7 +13,7 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function Card({ title, topic, date, id }) {
+function Card({ title, topic, date, id, onCardClick }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const dropdownRef = useRef(null);
@@ -50,11 +50,21 @@ function Card({ title, topic, date, id }) {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleCardClick = (e) => {
+  e.preventDefault();
+  console.log('Card clicked, id:', id, 'isDragging:', isDragging);
+  if (!isDragging && onCardClick) {
+    console.log('Calling onCardClick with id:', id);
+    onCardClick(id);
+  }
+};
+
   return (
     <SCardItem 
       draggable="true"
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onClick={handleCardClick}
       style={{ 
         opacity: isDragging ? 0.4 : 1,
         cursor: 'grab'
@@ -73,13 +83,12 @@ function Card({ title, topic, date, id }) {
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
-  
           </SCardButton>
         </SCardGroup>
         <SCardContent>
-          <Link to={`/card/${id}`} style={{ textDecoration: 'none' }}>
-            <SCardTitle>{title}</SCardTitle>
-          </Link>
+          <Link to={`/card/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+    <SCardTitle>{title}</SCardTitle>
+  </Link>
           <SCardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"
