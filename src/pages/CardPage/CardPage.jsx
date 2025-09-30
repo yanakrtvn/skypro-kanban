@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { kanbanAPI } from "../../services/api.js";
+import { useTasks } from "../../contexts/TaskContext";
 import { 
   SCardPageContainer,
   SCardPageContent,
@@ -29,57 +29,29 @@ const topics = [
   "Copywriting",
 ];
 
-function CardPage({ token }) {
+function CardPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [task, setTask] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { getTaskById, updateTask, deleteTask } = useTasks();
+  
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    topic: '',
-    status: '',
-    description: '',
-    date: ''
-  });
+  const [formData, setFormData] = useState(null);
+
+  const task = getTaskById(id);
 
   useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        setIsLoading(true);
-        setError('');
-        
-        const authToken = token || localStorage.getItem('token');
-        
-        if (!authToken) {
-          throw new Error('Токен авторизации не найден');
-        }
-
-        const taskData = await kanbanAPI.getTask({ 
-          id: id, 
-          token: authToken 
-        });
-        
-        setTask(taskData);
-        setFormData({
-          title: taskData.title || '',
-          topic: taskData.topic || topics[0],
-          status: taskData.status || statuses[0],
-          description: taskData.description || '',
-          date: taskData.date ? taskData.date.split('T')[0] : new Date().toISOString().split('T')[0]
-        });
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchTask();
+    if (task) {
+      setFormData({
+        title: task.title || '',
+        topic: task.topic || topics[0],
+        status: task.status || statuses[0],
+        description: task.description || '',
+        date: task.date ? task.date.split('T')[0] : new Date().toISOString().split('T')[0]
+      });
     }
-  }, [id, token]);
+  }, [task]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,41 +63,40 @@ function CardPage({ token }) {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    if (!formData) return;
+    
     try {
+      setIsLoading(true);
       setError('');
-      const authToken = token || localStorage.getItem('token');
       
-      await kanbanAPI.editTask({
-        id: id,
-        token: authToken,
-        task: {
-          title: formData.title,
-          topic: formData.topic,
-          status: formData.status,
-          description: formData.description,
-          date: new Date(formData.date).toISOString()
-        }
+      await updateTask(id, {
+        title: formData.title,
+        topic: formData.topic,
+        status: formData.status,
+        description: formData.description,
+        date: new Date(formData.date).toISOString()
       });
 
       setIsEditing(false);
-      const updatedTask = await kanbanAPI.getTask({ id, token: authToken });
-      setTask(updatedTask);
     } catch (error) {
       setError(error.message);
       console.error('Ошибка сохранения задачи:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDelete = async () => {
     if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
       try {
-        const authToken = token || localStorage.getItem('token');
-        
-        await kanbanAPI.deleteTask({ id, token: authToken });
+        setIsLoading(true);
+        await deleteTask(id);
         navigate('/');
       } catch (error) {
         setError(error.message);
         console.error('Ошибка удаления задачи:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -147,21 +118,10 @@ function CardPage({ token }) {
     navigate('/');
   };
 
-  if (isLoading) {
+  if (!task || !formData) {
     return (
       <SCardPageContainer>
         <SLoadingText>Загрузка задачи...</SLoadingText>
-      </SCardPageContainer>
-    );
-  }
-
-  if (!task && !isLoading) {
-    return (
-      <SCardPageContainer>
-        <SError>Задача не найдена</SError>
-        <SCardPageButton onClick={() => navigate('/')}>
-          Вернуться на главную
-        </SCardPageButton>
       </SCardPageContainer>
     );
   }
@@ -184,6 +144,7 @@ function CardPage({ token }) {
                 value={formData.title}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
               />
             </div>
             
@@ -193,6 +154,7 @@ function CardPage({ token }) {
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
+                disabled={isLoading}
               >
                 {statuses.map(status => (
                   <option key={status} value={status}>{status}</option>
@@ -206,6 +168,7 @@ function CardPage({ token }) {
                 name="topic"
                 value={formData.topic}
                 onChange={handleChange}
+                disabled={isLoading}
               >
                 {topics.map(topic => (
                   <option key={topic} value={topic}>{topic}</option>
@@ -220,6 +183,7 @@ function CardPage({ token }) {
                 value={formData.description}
                 onChange={handleChange}
                 rows="4"
+                disabled={isLoading}
               />
             </div>
 
@@ -230,20 +194,39 @@ function CardPage({ token }) {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
+                disabled={isLoading}
               />
             </div>
 
             <SButtonsGroup>
-              <SCardPageButton type="submit" $primary>
-                Сохранить
+              <SCardPageButton 
+                type="submit" 
+                $primary
+                disabled={isLoading}
+              >
+                {isLoading ? 'Сохранение...' : 'Сохранить'}
               </SCardPageButton>
-              <SCardPageButton type="button" onClick={handleCancel} $secondary>
+              <SCardPageButton 
+                type="button" 
+                onClick={handleCancel}
+                $secondary
+                disabled={isLoading}
+              >
                 Отменить
               </SCardPageButton>
-              <SCardPageButton type="button" onClick={handleDelete} $danger>
+              <SCardPageButton 
+                type="button" 
+                onClick={handleDelete} 
+                $danger
+                disabled={isLoading}
+              >
                 Удалить задачу
               </SCardPageButton>
-              <SCardPageButton type="button" onClick={handleClose} $secondary>
+              <SCardPageButton 
+                type="button" 
+                onClick={handleClose} 
+                $secondary
+              >
                 Закрыть
               </SCardPageButton>
             </SButtonsGroup>

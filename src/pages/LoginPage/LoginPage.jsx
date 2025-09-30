@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { authAPI } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
     SLoginContainer, 
     SLoginForm, 
@@ -10,7 +11,7 @@ import {
     SError
 } from "./LoginPage.styled";
 
-function LoginPage({ setIsAuth, setUserData, setToken }) {
+function LoginPage() {
     const [formData, setFormData] = useState({
         login: '',
         password: ''
@@ -19,6 +20,7 @@ function LoginPage({ setIsAuth, setUserData, setToken }) {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -47,13 +49,13 @@ function LoginPage({ setIsAuth, setUserData, setToken }) {
                 password: formData.password
             });
 
-            localStorage.setItem('token', response.user.token);
-            setToken(response.user.token);
-            setIsAuth(true);
-            setUserData({
-                name: response.user.name || response.user.login,
-                login: response.user.login
-            });
+            login(
+                {
+                    name: response.user.name || response.user.login,
+                    login: response.user.login
+                },
+                response.user.token
+            );
             
             navigate('/');
         } catch (error) {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { kanbanAPI } from "../../services/api.js";
+import { useTasks } from "../../contexts/TaskContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { 
   SNewCardContainer,
   SNewCardForm,
@@ -30,8 +31,11 @@ const topic = [
   "Copywriting",
 ];
 
-function NewCardPage({ token }) {
+function NewCardPage() {
   const navigate = useNavigate();
+  useAuth();
+  const { addTask } = useTasks();
+
   const [formData, setFormData] = useState({
     title: '',
     topic: topic[0],
@@ -50,6 +54,12 @@ function NewCardPage({ token }) {
       errors.title = 'Введите название задачи...';
     } else if (formData.title.trim().length < 3) {
       errors.title = 'Название должно содержать минимум 3 символа';
+    }
+
+    if (!formData.description.trim()) {
+      errors.description = 'Введите описание задачи...';
+    } else if (formData.description.trim().length < 3) {
+      errors.description = 'Описание должно содержать минимум 3 символа';
     }
 
     setFieldErrors(errors);
@@ -94,24 +104,18 @@ function NewCardPage({ token }) {
     setError('');
 
     try {
-      const authToken = token || localStorage.getItem('token');
-      
-      if (!authToken) {
-        throw new Error('Токен авторизации не найден');
-      }
+      const taskData = {
+        title: formData.title.trim(),
+        topic: formData.topic,
+        status: formData.status,
+        description: formData.description.trim(),
+        date: formData.date
+      };
 
-      await kanbanAPI.postTask({
-        token: authToken,
-        task: {
-          title: formData.title.trim(),
-          topic: formData.topic,
-          status: formData.status,
-          description: formData.description.trim(),
-          date: formData.date
-        }
-      });
+      await addTask(taskData);
 
       navigate('/');
+
     } catch (error) {
       console.error('Ошибка создания задачи:', error);
       

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { authAPI } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
     SRegisterContainer, 
     SRegisterForm, 
@@ -10,7 +11,7 @@ import {
     SError
 } from "./RegisterPage.styled";
 
-function RegisterPage({ setIsAuth, setUserData, setToken }) {
+function RegisterPage() {
     const [formData, setFormData] = useState({
         name: '',
         login: '',
@@ -20,7 +21,7 @@ function RegisterPage({ setIsAuth, setUserData, setToken }) {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,12 +45,13 @@ function RegisterPage({ setIsAuth, setUserData, setToken }) {
                 password: formData.password
             });
 
-            setToken(response.user.token);
-            setIsAuth(true);
-            setUserData({
-                name: response.user.name,
-                email: response.user.login
-            });
+            login(
+                {
+                    name: response.user.name,
+                    login: response.user.login
+                },
+                response.user.token
+            );
             
             navigate('/');
         } catch (error) {
