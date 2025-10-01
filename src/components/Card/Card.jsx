@@ -11,7 +11,6 @@ import {
   SDateText,
 } from "./Card.styled.js";
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
 
 function Card({ title, topic, date, id, onCardClick }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -51,13 +50,13 @@ function Card({ title, topic, date, id, onCardClick }) {
   };
 
   const handleCardClick = (e) => {
-  e.preventDefault();
-  console.log('Card clicked, id:', id, 'isDragging:', isDragging);
-  if (!isDragging && onCardClick) {
-    console.log('Calling onCardClick with id:', id);
-    onCardClick(id);
-  }
-};
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isDragging && onCardClick) {
+      onCardClick(id);
+    }
+  };
 
   return (
     <SCardItem 
@@ -86,9 +85,7 @@ function Card({ title, topic, date, id, onCardClick }) {
           </SCardButton>
         </SCardGroup>
         <SCardContent>
-          <Link to={`/card/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-    <SCardTitle>{title}</SCardTitle>
-  </Link>
+          <SCardTitle>{title}</SCardTitle>
           <SCardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -40,7 +40,7 @@ function MainPageWithPopups() {
   
   const { logout } = useAuth();
   
-  const [activePopup, setActivePopup] = useState(null); // 'new', 'browse', 'exit'
+  const [activePopup, setActivePopup] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   const statuses = [

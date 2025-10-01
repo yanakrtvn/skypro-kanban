@@ -1,5 +1,6 @@
 import Column from "../../components/Column/Column.jsx";
-import { useEffect } from "react";
+import TaskModal from "../../components/TaskModal/TaskModal.jsx";
+import { useEffect, useState } from "react";
 import { useTasks } from "../../contexts/TaskContext";
 import { 
   SMainBlock,
@@ -14,8 +15,12 @@ function MainPage() {
     tasks, 
     isLoading, 
     error, 
-    loadTasks 
+    loadTasks,
+    deleteTask 
   } = useTasks();
+  
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const statuses = [
     "Без статуса",
@@ -30,6 +35,21 @@ function MainPage() {
       loadTasks();
     }
   }, [tasks.length, isLoading, loadTasks]);
+
+  const handleCardClick = (taskId) => {
+    setSelectedTaskId(taskId);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTaskId(null);
+  };
+
+  const handleDeleteTask = (taskId) => {
+    deleteTask(taskId);
+    handleCloseModal();
+  };
 
   if (isLoading) {
     return (
@@ -51,9 +71,20 @@ function MainPage() {
       
       <SMainContent>
         {statuses.map((status, i) => (
-          <Column key={i} title={status} />
+          <Column 
+            key={i} 
+            title={status} 
+            onCardClick={handleCardClick}
+          />
         ))}
       </SMainContent>
+
+      <TaskModal
+        taskId={selectedTaskId}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onDelete={handleDeleteTask}
+      />
     </SMainBlock>
   );
 }

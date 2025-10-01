@@ -18,14 +18,7 @@ import {
   SCalendar,
   SCalendarTtl,
   SCalendarBlock,
-  // SCalendarContent,
-  // SCalendarDaysNames,
-  // SCalendarCells,
-  // SCalendarCell,
-  // SCalendarNav,
   SCalendarPeriod,
-  // SNavActions,
-  // SNavAction,
   SCategories,
   SCategoriesP,
   SCategoriesTheme,
@@ -33,7 +26,7 @@ import {
   SPopBrowseBtnEdit
 } from "./PopBrowse.styled.js";
 
-function PopBrowse({ isOpen, onClose, taskId }) {
+function PopBrowse({ $isOpen, onClose, taskId }) {
   const { getTaskById, updateTask, deleteTask } = useTasks();
   
   const [isEditing, setIsEditing] = useState(false);
@@ -55,7 +48,7 @@ function PopBrowse({ isOpen, onClose, taskId }) {
     }
   }, [task]);
 
-  if (!isOpen || !task) return null;
+  if (!$isOpen || !task) return null;
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -162,7 +155,7 @@ function PopBrowse({ isOpen, onClose, taskId }) {
   };
 
   return (
-    <SPopBrowse $isOpen={isOpen}>
+    <SPopBrowse $isOpen={$isOpen}>
       <SPopBrowseContainer>
         <SPopBrowseBlock>
           <SPopBrowseContent>
