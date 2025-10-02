@@ -20,7 +20,10 @@ import {
   SCategoriesP,
   SCategoriesTheme,
   SPopBrowseBtnBrowse,
-  SPopBrowseBtnEdit
+  SPopBrowseBtnEdit,
+  STitleInput,
+  STopicSelect,
+  SErrorDiv
 } from "./PopBrowse.styled.js";
 
 function PopBrowse({ $isOpen, onClose, taskId }) {
@@ -188,62 +191,31 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
       <SPopBrowseContainer>
         <SPopBrowseBlock>
           <SPopBrowseContent>
-            {error && (
-              <div style={{ 
-                color: 'red', 
-                marginBottom: '15px', 
-                textAlign: 'center',
-                padding: '10px',
-                backgroundColor: '#ffe6e6',
-                borderRadius: '4px'
-              }}>
-                {error}
-              </div>
-            )}
+            {error && <SErrorDiv>{error}</SErrorDiv>}
 
             <SPopBrowseTopBlock>
               {isEditing ? (
-                <input
+                <STitleInput
                   type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
                   disabled={isLoading}
-                  style={{
-                    border: 'none',
-                    background: 'transparent',
-                    fontSize: 'inherit',
-                    fontWeight: 'inherit',
-                    color: 'inherit',
-                    width: '100%',
-                    outline: 'none',
-                    borderBottom: '1px solid #ccc',
-                    padding: '2px 0'
-                  }}
                 />
               ) : (
                 <SPopBrowseTtl>{task.title}</SPopBrowseTtl>
               )}
               <SCategoriesTheme className={`${getTopicClass(formData.topic)} _active-category`}>
                 {isEditing ? (
-                  <select
+                  <STopicSelect
                     value={formData.topic}
                     onChange={(e) => handleTopicChange(e.target.value)}
                     disabled={isLoading}
-                    style={{
-                      border: 'none',
-                      background: 'transparent',
-                      color: 'inherit',
-                      outline: 'none',
-                      cursor: 'pointer',
-                      fontSize: 'inherit',
-                      fontWeight: 'inherit'
-                    }}
                   >
                     {topics.map(topicItem => (
                       <option key={topicItem} value={topicItem}>{topicItem}</option>
                     ))}
-                  </select>
+                  </STopicSelect>
                 ) : (
                   <p>{task.topic}</p>
                 )}
@@ -301,24 +273,15 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
               <SCategoriesP className="subttl">Категория</SCategoriesP>
               <SCategoriesTheme className={`${getTopicClass(formData.topic)} _active-category`}>
                 {isEditing ? (
-                  <select
+                  <STopicSelect
                     value={formData.topic}
                     onChange={(e) => handleTopicChange(e.target.value)}
                     disabled={isLoading}
-                    style={{
-                      border: 'none',
-                      background: 'transparent',
-                      color: 'inherit',
-                      outline: 'none',
-                      cursor: 'pointer',
-                      fontSize: 'inherit',
-                      fontWeight: 'inherit'
-                    }}
                   >
                     {topics.map(topicItem => (
                       <option key={topicItem} value={topicItem}>{topicItem}</option>
                     ))}
-                  </select>
+                  </STopicSelect>
                 ) : (
                   <p>{task.topic}</p>
                 )}

@@ -21,24 +21,8 @@ function TaskModal({ taskId, isOpen, onClose, onDelete }) {
   }
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0,0,0,0.5)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000
-    }}>
-      <div style={{
-        background: 'white',
-        padding: '20px',
-        borderRadius: '8px',
-        minWidth: '300px'
-      }}>
+  
+      <div >
         <h2>Модальное окно</h2>
         <p><strong>Задача:</strong> {task.title}</p>
         <p><strong>ID:</strong> {taskId}</p>
@@ -47,7 +31,6 @@ function TaskModal({ taskId, isOpen, onClose, onDelete }) {
           Удалить
         </button>
       </div>
-    </div>
   );
 }
 

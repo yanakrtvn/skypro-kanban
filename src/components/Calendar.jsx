@@ -108,10 +108,22 @@ const CalendarNav = styled.div`
   padding: 0 7px;
 `;
 
+const CalendarMonth = styled.div`
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  order: 1;
+  flex-grow: 1;
+  text-align: center;
+`;
+
 const NavActions = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  order: 2;
+  gap: 8px;
 `;
 
 const NavAction = styled.div`
@@ -230,19 +242,15 @@ function Calendar({ selectedDate, onDateChange }) {
       <SCalendarBlock>
         <CalendarContent>
           <CalendarNav>
+            <CalendarMonth>
+              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </CalendarMonth>
             <NavActions>
               <NavAction onClick={prevMonth}>
                 <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M5 1L1 5L5 9" stroke="#94A6BE" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </NavAction>
-            </NavActions>
-            
-            <div className="calendar__month">
-              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-            </div>
-            
-            <NavActions>
               <NavAction onClick={nextMonth}>
                 <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 9L5 5L1 1" stroke="#94A6BE" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

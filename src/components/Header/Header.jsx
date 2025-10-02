@@ -87,11 +87,6 @@ function Header({ onNewCardClick, onExitClick }) {
               height="7" 
               viewBox="0 0 12 7" 
               fill="none"
-              style={{ 
-                marginLeft: '8px',
-                transform: userMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s ease'
-              }}
             >
               <path d="M1 1L6 6L11 1" stroke="#94A6BE" strokeWidth="1.5"/>
             </svg>

@@ -14,11 +14,7 @@ export const SPopBrowse = styled.div`
   @media screen and (max-width: 660px) {
     top: 70px;
   }
-
-  @media screen and (max-width: 495px) {
-  }
 `;
-
 
 export const SPopBrowseContainer = styled.div`
   width: 100%;
@@ -100,7 +96,6 @@ export const SFormBrowseArea = styled.textarea`
   outline: none;
   padding: 14px;
   background: #EAEEF6;
-  background: rgba(234, 238, 246, 1);
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -148,88 +143,6 @@ export const SStatusTheme = styled.div`
   }
 `;
 
-export const SCalendar = styled.div`
-  width: 182px;
-  margin-bottom: 20px;
-`;
-
-export const SCalendarTtl = styled.p`
-  margin-bottom: 14px;
-  padding: 0 7px;
-`;
-
-export const SCalendarBlock = styled.div`
-  display: block;
-`;
-
-export const SCalendarContent = styled.div`
-  margin-bottom: 12px;
-`;
-
-export const SCalendarDaysNames = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  margin: 7px 0;
-  padding: 0 7px;
-`;
-
-export const SCalendarCells = styled.div`
-  width: 182px;
-  height: 126px;
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-export const SCalendarCell = styled.div`
-  width: 22px;
-  height: 22px;
-  margin: 2px;
-  border-radius: 50%;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  color: #94A6BE;
-  font-size: 10px;
-  line-height: 1;
-  letter-spacing: -0.2px;
-  cursor: pointer;
-`;
-
-export const SCalendarNav = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 14px;
-  padding: 0 7px;
-`;
-
-export const SCalendarPeriod = styled.div`
-  padding: 0 7px;
-`;
-
-export const SNavActions = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-export const SNavAction = styled.div`
-  width: 18px;
-  height: 25px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  svg {
-    fill: #94A6BE;
-  }
-`;
-
 export const SCategories = styled.div`
   margin-bottom: 20px;
 `;
@@ -238,21 +151,9 @@ export const SCategoriesP = styled.p`
   margin-bottom: 14px;
 `;
 
-export const SCategoriesThemes = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-`;
-
 export const SCategoriesTheme = styled.div`
-  display: inline-block;
-  padding: 8px 20px;
   border-radius: 24px;
-  margin-right: 7px;
   opacity: 0.4;
-  width: 115px;
-  height: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -264,6 +165,24 @@ export const SCategoriesTheme = styled.div`
     font-weight: 600;
     line-height: 14px;
     white-space: nowrap;
+  }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+  }
+
+  select::-ms-expand {
+    display: none;
   }
 `;
 
@@ -301,3 +220,34 @@ export const SPopBrowseBtnEdit = styled.div`
   }
 `;
 
+export const STitleInput = styled.input`
+  border: none;
+  background: transparent;
+  color: inherit;
+  width: 100%;
+  outline: none;
+  border-bottom: none;
+  padding: 2px 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+export const STopicSelect = styled.select`
+  border: none;
+  background: transparent;
+  color: inherit;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 250;
+`;
+
+export const SErrorDiv = styled.div`
+  color: red;
+  margin-bottom: 15px;
+  text-align: center;
+  padding: 10px;
+  background-color: #ffe6e6;
+  border-radius: 4px;
+`;
