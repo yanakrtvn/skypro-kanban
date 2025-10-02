@@ -7,8 +7,10 @@ export const TaskProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const loadTasks = useCallback(async () => {
-        if (isLoading) return;
+    const loadTasks = useCallback(async (force = false) => {
+        if (force) {
+            setTasks([]);
+        }
         
         try {
             setIsLoading(true);
@@ -29,7 +31,7 @@ export const TaskProvider = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    }, []);
 
     const addTask = async (taskData) => {
         try {

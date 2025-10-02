@@ -7,7 +7,7 @@ import {
 } from "./Column.styled.js";
 import { useTasks } from '../../contexts/TaskContext';
 
-function Column({ title }) {
+function Column({ title, onCardClick }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const { tasks, updateTask, deleteTask } = useTasks();
 
@@ -65,6 +65,7 @@ function Column({ title }) {
             topic={card.topic}
             date={formatDate(card.date)}
             onDelete={handleDeleteTask}
+            onCardClick={onCardClick}
           />
         ))}
       </SCardsContainer>

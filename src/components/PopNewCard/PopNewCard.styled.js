@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const SPopNewCard = styled.div`
-  display: ${props => props.isOpen ? 'block' : 'none'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
   width: 100%;
   min-width: 375px;
   height: 100%;
@@ -90,6 +90,9 @@ export const SFormNewInput = styled.input`
   line-height: 1;
   letter-spacing: -0.14px;
   margin: 20px 0;
+  font-family: Roboto;
+font-size: 14px;
+font-weight: 400;
   
   &::placeholder {
     font-weight: 400;
@@ -113,6 +116,9 @@ export const SFormNewArea = styled.textarea`
   margin-top: 14px;
   height: 200px;
   max-width: 370px;
+  font-family: Roboto;
+font-size: 14px;
+font-weight: 400;
   
   &::placeholder {
     font-weight: 400;
