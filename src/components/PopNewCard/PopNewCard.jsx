@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTasks } from "../../contexts/TaskContext";
+import Calendar from "../Calendar.jsx";
 import {
   SPopNewCard,
   SPopNewCardContainer,
@@ -12,17 +13,6 @@ import {
   SFormNewBlock,
   SFormNewInput,
   SFormNewArea,
-  SCalendar,
-  SCalendarTtl,
-  SCalendarBlock,
-  SCalendarContent,
-  SCalendarDaysNames,
-  SCalendarCells,
-  SCalendarCell,
-  SCalendarNav,
-  SCalendarPeriod,
-  SNavActions,
-  SNavAction,
   SCategories,
   SCategoriesP,
   SCategoriesThemes,
@@ -67,6 +57,13 @@ function PopNewCard({ $isOpen, onClose }) {
     }));
   };
 
+  const handleDateChange = (date) => {
+    setFormData(prev => ({
+      ...prev,
+      date: date
+    }));
+  };
+
   const handleTopicChange = (topic) => {
     setFormData(prev => ({
       ...prev,
@@ -94,7 +91,7 @@ function PopNewCard({ $isOpen, onClose }) {
         date: formData.date
       });
 
-      await loadTasks();
+      await loadTasks(true);
 
       setFormData({
         title: '',
@@ -164,29 +161,10 @@ function PopNewCard({ $isOpen, onClose }) {
                 </SFormNewBlock>
               </SFormNew>
               
-              <SCalendar>
-                <SCalendarTtl className="subttl">Даты</SCalendarTtl>
-                <SCalendarBlock>
-                  <SCalendarPeriod>
-                    <p className="calendar__p date-end">
-                      Срок исполнения:{" "}
-                      <input 
-                        type="date" 
-                        name="date"
-                        value={formData.date}
-                        onChange={handleInputChange}
-                        disabled={isLoading}
-                        style={{ 
-                          border: 'none', 
-                          background: 'transparent',
-                          color: 'inherit',
-                          font: 'inherit'
-                        }}
-                      />
-                    </p>
-                  </SCalendarPeriod>
-                </SCalendarBlock>
-              </SCalendar>
+              <Calendar 
+                selectedDate={formData.date}
+                onDateChange={handleDateChange}
+              />
             </SPopNewCardWrap>
             
             <SCategories>

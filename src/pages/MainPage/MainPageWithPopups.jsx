@@ -32,7 +32,7 @@ const Container = styled.div`
 
 function MainPageWithPopups() {
   const { 
-    tasks, 
+    
     isLoading, 
     error, 
     loadTasks 
@@ -52,10 +52,16 @@ function MainPageWithPopups() {
   ];
 
   useEffect(() => {
-    if (tasks.length === 0 && !isLoading) {
-      loadTasks();
-    }
-  }, [tasks.length, isLoading, loadTasks]);
+    const loadTasksOnEnter = async () => {
+      try {
+        await loadTasks(true);
+      } catch (error) {
+        console.error('Ошибка загрузки задач:', error);
+      }
+    };
+
+    loadTasksOnEnter();
+  }, []);
 
   const handleOpenNewCard = () => {
     setActivePopup('new');

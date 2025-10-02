@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTasks } from "../../contexts/TaskContext";
+import Calendar from "../Calendar.jsx";
 import {
   SPopBrowse,
   SPopBrowseContainer,
@@ -15,10 +16,6 @@ import {
   SStatusP,
   SStatusThemes,
   SStatusTheme,
-  SCalendar,
-  SCalendarTtl,
-  SCalendarBlock,
-  SCalendarPeriod,
   SCategories,
   SCategoriesP,
   SCategoriesTheme,
@@ -30,7 +27,13 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
   const { getTaskById, updateTask, deleteTask } = useTasks();
   
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    topic: 'Web Design',
+    status: 'Без статуса',
+    description: '',
+    date: new Date().toISOString().split('T')[0]
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -45,8 +48,9 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
         description: task.description || '',
         date: task.date ? new Date(task.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
       });
+      setError('');
     }
-  }, [task]);
+  }, [task, taskId]);
 
   if (!$isOpen || !task) return null;
 
@@ -65,7 +69,16 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
     }));
   };
 
+  const handleDateChange = (date) => {
+    setFormData(prev => ({
+      ...prev,
+      date: date
+    }));
+  };
+
   const handleStatusChange = (status) => {
+    if (!isEditing || isLoading) return;
+    
     setFormData(prev => ({
       ...prev,
       status
@@ -82,8 +95,13 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
   const handleSave = async (e) => {
     e.preventDefault();
     
-    if (!formData.title.trim() || !formData.description.trim()) {
-      setError('Заполните все обязательные поля');
+    if (!formData.title.trim()) {
+      setError('Введите название задачи');
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      setError('Введите описание задачи');
       return;
     }
 
@@ -100,6 +118,7 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
       });
 
       setIsEditing(false);
+      setError('');
     } catch (error) {
       setError(error.message || 'Ошибка при сохранении задачи');
       console.error('Ошибка сохранения задачи:', error);
@@ -124,13 +143,15 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
   };
 
   const handleCancelEdit = () => {
-    setFormData({
-      title: task.title || '',
-      topic: task.topic || 'Web Design',
-      status: task.status || 'Без статуса',
-      description: task.description || '',
-      date: task.date ? new Date(task.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
-    });
+    if (task) {
+      setFormData({
+        title: task.title || '',
+        topic: task.topic || 'Web Design',
+        status: task.status || 'Без статуса',
+        description: task.description || '',
+        date: task.date ? new Date(task.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+      });
+    }
     setIsEditing(false);
     setError('');
   };
@@ -154,13 +175,28 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
     }
   };
 
+  const getStatusClass = (statusItem) => {
+    if (!isEditing) {
+      return formData.status === statusItem ? '_gray' : '_hide';
+    } else {
+      return formData.status === statusItem ? '_gray' : '_border';
+    }
+  };
+
   return (
     <SPopBrowse $isOpen={$isOpen}>
       <SPopBrowseContainer>
         <SPopBrowseBlock>
           <SPopBrowseContent>
             {error && (
-              <div style={{ color: 'red', marginBottom: '15px', textAlign: 'center' }}>
+              <div style={{ 
+                color: 'red', 
+                marginBottom: '15px', 
+                textAlign: 'center',
+                padding: '10px',
+                backgroundColor: '#ffe6e6',
+                borderRadius: '4px'
+              }}>
                 {error}
               </div>
             )}
@@ -170,7 +206,7 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                 <input
                   type="text"
                   name="title"
-                  value={formData?.title || ''}
+                  value={formData.title}
                   onChange={handleInputChange}
                   disabled={isLoading}
                   style={{
@@ -180,34 +216,37 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                     fontWeight: 'inherit',
                     color: 'inherit',
                     width: '100%',
-                    outline: 'none'
+                    outline: 'none',
+                    borderBottom: '1px solid #ccc',
+                    padding: '2px 0'
                   }}
                 />
               ) : (
                 <SPopBrowseTtl>{task.title}</SPopBrowseTtl>
               )}
-              <SCategoriesTheme className={`${getTopicClass(task.topic)} _active-category`}>
-                <p className={getTopicClass(task.topic)}>
-                  {isEditing ? (
-                    <select
-                      value={formData?.topic || 'Web Design'}
-                      onChange={(e) => handleTopicChange(e.target.value)}
-                      disabled={isLoading}
-                      style={{
-                        border: 'none',
-                        background: 'transparent',
-                        color: 'inherit',
-                        outline: 'none'
-                      }}
-                    >
-                      {topics.map(topicItem => (
-                        <option key={topicItem} value={topicItem}>{topicItem}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    task.topic
-                  )}
-                </p>
+              <SCategoriesTheme className={`${getTopicClass(formData.topic)} _active-category`}>
+                {isEditing ? (
+                  <select
+                    value={formData.topic}
+                    onChange={(e) => handleTopicChange(e.target.value)}
+                    disabled={isLoading}
+                    style={{
+                      border: 'none',
+                      background: 'transparent',
+                      color: 'inherit',
+                      outline: 'none',
+                      cursor: 'pointer',
+                      fontSize: 'inherit',
+                      fontWeight: 'inherit'
+                    }}
+                  >
+                    {topics.map(topicItem => (
+                      <option key={topicItem} value={topicItem}>{topicItem}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <p>{task.topic}</p>
+                )}
               </SCategoriesTheme>
             </SPopBrowseTopBlock>
             
@@ -217,18 +256,13 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                 {statuses.map((statusItem) => (
                   <SStatusTheme 
                     key={statusItem}
-                    className={isEditing ? 
-                      (formData?.status === statusItem ? '_gray' : '_hide') : 
-                      (task.status === statusItem ? '_gray' : '_hide')
-                    }
-                    onClick={() => isEditing && !isLoading && handleStatusChange(statusItem)}
+                    className={getStatusClass(statusItem)}
+                    onClick={() => handleStatusChange(statusItem)}
                     style={{ 
-                      cursor: isEditing && !isLoading ? 'pointer' : 'default'
+                      cursor: isEditing && !isLoading ? 'pointer' : 'default',
                     }}
                   >
-                    <p className={isEditing && formData?.status === statusItem ? '_gray' : ''}>
-                      {statusItem}
-                    </p>
+                    <p>{statusItem}</p>
                   </SStatusTheme>
                 ))}
               </SStatusThemes>
@@ -243,70 +277,51 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                   <SFormBrowseArea
                     name="description"
                     id="textArea01"
-                    value={formData?.description || ''}
+                    value={formData.description}
                     onChange={handleInputChange}
                     readOnly={!isEditing}
                     placeholder="Введите описание задачи..."
                     disabled={isLoading}
-                  ></SFormBrowseArea>
+                    style={{
+                      cursor: isEditing ? 'text' : 'default',
+                      backgroundColor: isEditing ? '#fff' : '#f6f6f6',
+                      border: isEditing ? '1px solid #ccc' : 'none'
+                    }}
+                  />
                 </SFormBrowseBlock>
               </SFormBrowse>
               
-              <SCalendar>
-                <SCalendarTtl className="subttl">Даты</SCalendarTtl>
-                <SCalendarBlock>
-                  <SCalendarPeriod>
-                    <p className="calendar__p date-end">
-                      Срок исполнения:{" "}
-                      {isEditing ? (
-                        <input 
-                          type="date" 
-                          name="date"
-                          value={formData?.date || ''}
-                          onChange={handleInputChange}
-                          disabled={isLoading}
-                          style={{ 
-                            border: 'none', 
-                            background: 'transparent',
-                            color: 'inherit',
-                            font: 'inherit'
-                          }}
-                        />
-                      ) : (
-                        <span className="date-control">
-                          {task.date ? new Date(task.date).toLocaleDateString('ru-RU') : 'Не указано'}
-                        </span>
-                      )}
-                    </p>
-                  </SCalendarPeriod>
-                </SCalendarBlock>
-              </SCalendar>
+              <Calendar 
+                selectedDate={formData.date}
+                onDateChange={isEditing ? handleDateChange : undefined}
+              />
             </SPopBrowseWrap>
             
             <SCategories className="theme-down">
               <SCategoriesP className="subttl">Категория</SCategoriesP>
-              <SCategoriesTheme className={`${getTopicClass(task.topic)} _active-category`}>
-                <p className={getTopicClass(task.topic)}>
-                  {isEditing ? (
-                    <select
-                      value={formData?.topic || 'Web Design'}
-                      onChange={(e) => handleTopicChange(e.target.value)}
-                      disabled={isLoading}
-                      style={{
-                        border: 'none',
-                        background: 'transparent',
-                        color: 'inherit',
-                        outline: 'none'
-                      }}
-                    >
-                      {topics.map(topicItem => (
-                        <option key={topicItem} value={topicItem}>{topicItem}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    task.topic
-                  )}
-                </p>
+              <SCategoriesTheme className={`${getTopicClass(formData.topic)} _active-category`}>
+                {isEditing ? (
+                  <select
+                    value={formData.topic}
+                    onChange={(e) => handleTopicChange(e.target.value)}
+                    disabled={isLoading}
+                    style={{
+                      border: 'none',
+                      background: 'transparent',
+                      color: 'inherit',
+                      outline: 'none',
+                      cursor: 'pointer',
+                      fontSize: 'inherit',
+                      fontWeight: 'inherit'
+                    }}
+                  >
+                    {topics.map(topicItem => (
+                      <option key={topicItem} value={topicItem}>{topicItem}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <p>{task.topic}</p>
+                )}
               </SCategoriesTheme>
             </SCategories>
             
@@ -316,6 +331,7 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                   className="btn-browse__edit _btn-bor _hover03"
                   onClick={() => setIsEditing(true)}
                   disabled={isLoading}
+                  type="button"
                 >
                   Редактировать задачу
                 </button>
@@ -323,6 +339,7 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                   className="btn-browse__delete _btn-bor _hover03"
                   onClick={handleDelete}
                   disabled={isLoading}
+                  type="button"
                 >
                   Удалить задачу
                 </button>
@@ -331,6 +348,7 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                 className="btn-browse__close _btn-bg _hover01" 
                 onClick={handleClose}
                 disabled={isLoading}
+                type="button"
               >
                 Закрыть
               </button>
@@ -350,6 +368,7 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                   className="btn-edit__edit _btn-bor _hover03"
                   onClick={handleCancelEdit}
                   disabled={isLoading}
+                  type="button"
                 >
                   Отменить
                 </button>
@@ -357,6 +376,7 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                   className="btn-edit__delete _btn-bor _hover03" 
                   onClick={handleDelete}
                   disabled={isLoading}
+                  type="button"
                 >
                   Удалить задачу
                 </button>
@@ -365,6 +385,7 @@ function PopBrowse({ $isOpen, onClose, taskId }) {
                 className="btn-edit__close _btn-bg _hover01" 
                 onClick={handleClose}
                 disabled={isLoading}
+                type="button"
               >
                 Закрыть
               </button>

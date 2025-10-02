@@ -52,8 +52,8 @@ function Header({ onNewCardClick, onExitClick }) {
     }
   };
 
-  const userName = userData?.name || "Иван Иванов";
-  const userEmail = userData?.email || "ivan.ivanov@gmail.com";
+   const userName = userData?.name || userData?.login || "Пользователь";
+  const userEmail = userData?.login ? `${userData.login}@example.com` : "email@example.com";
 
   return (
     <SHeader>
@@ -105,12 +105,12 @@ function Header({ onNewCardClick, onExitClick }) {
             <SUserMenuName>{userName}</SUserMenuName>
             <SUserMenuEmail>{userEmail}</SUserMenuEmail>
             <SUserMenuTheme>
-              <p>Темная тема</p>
-              <label className="theme-switch">
-                <input type="checkbox" className="checkbox" name="checkbox" />
-                <span className="theme-slider"></span>
-              </label>
-            </SUserMenuTheme>
+  <p>Темная тема</p>
+  <input 
+    type="checkbox" 
+    className="theme-checkbox"
+  />
+</SUserMenuTheme>
             <SUserMenuButton 
               type="button" 
               className="_hover03"

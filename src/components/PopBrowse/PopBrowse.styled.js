@@ -100,7 +100,8 @@ export const SFormBrowseArea = styled.textarea`
   outline: none;
   padding: 14px;
   background: #EAEEF6;
-  border: 0.7px solid rgba(148, 166, 190, 0.4);
+  background: rgba(234, 238, 246, 1);
+  border: none;
   border-radius: 8px;
   font-size: 14px;
   line-height: 1;
@@ -246,12 +247,17 @@ export const SCategoriesThemes = styled.div`
 
 export const SCategoriesTheme = styled.div`
   display: inline-block;
-  width: auto;
-  height: 30px;
   padding: 8px 20px;
   border-radius: 24px;
   margin-right: 7px;
   opacity: 0.4;
+  width: 115px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 20px 8px 20px;
   
   p {
     font-size: 14px;
