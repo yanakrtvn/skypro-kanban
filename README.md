@@ -1,12 +1,57 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+KANBAN 
 
-Currently, two official plugins are available:
+Веб-приложение для управления задачами по методологии Kanban. Приложение позволяет пользователям создавать, редактировать, удалять и перемещать задачи между колонками различных статусов.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Основные функции:
+1. Аутентификация и авторизация
 
-## Expanding the ESLint configuration
+    Регистрация новых пользователей
+    Вход в систему
+    Защита маршрутов
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+2. Управление задачами
+-Создание задач - Popup для добавления новых задач с полями:
+
+    Название задачи
+    Описание
+    Категория (Web Design, Research, Copywriting)
+    Дата выполнения
+    Статус (по умолчанию "Без статуса")
+
+-Просмотр и редактирование - Детальный просмотр задач с возможностью:
+    Редактирования всех полей
+    Изменения статуса
+    Удаления задач
+
+-Drag & Drop - Перемещение задач между колонками:
+    Автоматическое обновление статуса
+
+3. Организация задач
+
+4. Интерфейс пользователя
+
+Адаптивный дизайн - Работа на desktop и mobile устройствах
+Индикаторы загрузки - Визуальная обратная связь при операциях
+Empty states - Сообщения когда задач нет
+Popup система - Модальные окна для всех операций
+
+5. Визуальные элементы
+
+    Календарь для выбора дат с навигацией по месяцам
+    Цветовое кодирование категорий задач
+    Иконки и визуальные индикаторы статусов
+    Hover-эффекты и анимации
+
+6. Управление состоянием
+
+    Context API для глобального состояния
+    Обработка ошибок с пользовательскими сообщениями
+
+7. Навигация
+
+    React Router для маршрутизации
+    Защищенные маршруты требующие аутентификации
+    Страница отдельной задачи по прямой ссылке
