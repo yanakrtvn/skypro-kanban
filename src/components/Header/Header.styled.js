@@ -84,6 +84,13 @@ export const SHeaderUser = styled.div`
   border: 1px solid ${props => props.$active ? '#565EEF' : 'transparent'};
   background: ${props => props.$active ? '#F0F2FF' : 'transparent'};
   transition: all 0.3s ease;
+  max-width: 200px;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   
   &:hover {
     background: #F0F2FF;
@@ -92,7 +99,7 @@ export const SHeaderUser = styled.div`
 `;
 
 export const SHeaderUserMenu = styled.div`
-  display: ${props => props.$visible ? 'flex' : 'none'}; /* Измените на flex */
+  display: ${props => props.$visible ? 'flex' : 'none'};
   position: absolute;
   top: 100%;
   right: 0;
@@ -101,15 +108,15 @@ export const SHeaderUserMenu = styled.div`
   border: 0.7px solid rgba(148, 166, 190, 0.4);
   border-radius: 10px;
   box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
-  padding: 34px;
+  padding: 24px 20px;
   z-index: 1001;
   animation: fadeIn 0.3s ease;
   box-sizing: border-box;
   width: 213px;
-  height: 205px;
+  min-height: 205px;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center; /* Это центрирует по горизонтали */
+  align-items: center;
 
   @keyframes fadeIn {
     from {
@@ -127,21 +134,37 @@ export const SUserMenuName = styled.p`
   color: #000;
   font-size: 14px;
   font-weight: 500;
-  line-height: 21px;
+  line-height: 1.3;
   letter-spacing: -0.14px;
   margin-bottom: 4px;
   width: 100%;
   text-align: center;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 export const SUserMenuEmail = styled.p`
   color: #94A6BE;
   font-size: 14px;
-  line-height: 21px;
+  line-height: 1.3;
   letter-spacing: -0.14px;
   margin-bottom: 10px;
   width: 100%;
   text-align: center;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 export const SUserMenuTheme = styled.div`
@@ -159,9 +182,13 @@ export const SUserMenuTheme = styled.div`
     letter-spacing: -0.14px;
     margin: 0;
     text-align: center;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    flex: 1;
+    padding-right: 10px;
   }
   
-  /* Стили для переключателя темы */
   input[type=checkbox] {
     position: relative;
     width: 24px;
@@ -173,6 +200,7 @@ export const SUserMenuTheme = styled.div`
     -moz-appearance: none;
     appearance: none;
     cursor: pointer;
+    flex-shrink: 0;
   }
   
   input[type=checkbox]::before {
@@ -201,15 +229,16 @@ export const SUserMenuButton = styled.button`
   border: 1px solid #565EEF;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0;
   
   a {
     color: rgba(86, 94, 239, 1);
-  font-family: Roboto;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 10px;
-  letter-spacing: 0%;
-  text-align: center;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+    letter-spacing: 0%;
+    text-align: center;
   }
   
   &:hover {
@@ -226,6 +255,7 @@ export const ThemeSwitch = styled.label`
   display: inline-block;
   width: 44px;
   height: 24px;
+  flex-shrink: 0;
   
   .checkbox {
     opacity: 0;

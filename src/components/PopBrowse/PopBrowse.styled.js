@@ -60,16 +60,22 @@ export const SPopBrowseContent = styled.div`
 
 export const SPopBrowseTopBlock = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 18px;
+  gap: 15px;
 `;
 
 export const SPopBrowseTtl = styled.h3`
   color: #000;
   font-size: 20px;
   font-weight: 600;
-  line-height: 24px;
+  line-height: 1.3;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1;
+  min-width: 0;
 `;
 
 export const SPopBrowseWrap = styled.div`
@@ -99,10 +105,11 @@ export const SFormBrowseArea = styled.textarea`
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  line-height: 1;
+  line-height: 1.4;
   letter-spacing: -0.14px;
   margin-top: 14px;
   height: 200px;
+  resize: vertical;
   
   &::placeholder {
     font-weight: 400;
@@ -158,7 +165,9 @@ export const SCategoriesTheme = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 8px 20px 8px 20px;
+  padding: 8px 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
   
   p {
     font-size: 14px;
@@ -179,6 +188,7 @@ export const SCategoriesTheme = styled.div`
     font-size: inherit;
     font-weight: inherit;
     color: inherit;
+    white-space: nowrap;
   }
 
   select::-ms-expand {
@@ -223,14 +233,34 @@ export const SPopBrowseBtnEdit = styled.div`
 export const STitleInput = styled.input`
   border: none;
   background: transparent;
-  color: inherit;
+  color: #000;
   width: 100%;
   outline: none;
-  border-bottom: none;
-  padding: 2px 0;
+  border-bottom: 2px solid #4A6CF7;
+  padding: 8px 4px;
   font-family: 'Roboto', sans-serif;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
+  cursor: text;
+  background-color: #f8f9ff;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+  min-height: 40px;
+  resize: none;
+  
+  &:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.1);
+  }
+  
+  &::placeholder {
+    color: #94A6BE;
+    font-weight: 400;
+  }
 `;
 
 export const STopicSelect = styled.select`
@@ -240,7 +270,16 @@ export const STopicSelect = styled.select`
   outline: none;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 250;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+  max-width: 120px;
+  
+  &:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
 `;
 
 export const SErrorDiv = styled.div`
@@ -250,4 +289,5 @@ export const SErrorDiv = styled.div`
   padding: 10px;
   background-color: #ffe6e6;
   border-radius: 4px;
+  word-wrap: break-word;
 `;

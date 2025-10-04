@@ -11,7 +11,11 @@ import {
   SMainContent,
   SLoadingContent,
   SLoadingText,
-  SError
+  SError,
+  SEmptyState,
+  SEmptyIcon,
+  SEmptyTitle,
+  SEmptyText
 } from "./MainPage.styled";
 import styled from 'styled-components';
 
@@ -32,7 +36,7 @@ const Container = styled.div`
 
 function MainPageWithPopups() {
   const { 
-    
+    tasks,
     isLoading, 
     error, 
     loadTasks 
@@ -62,6 +66,8 @@ function MainPageWithPopups() {
 
     loadTasksOnEnter();
   }, []);
+
+  const hasTasks = tasks && tasks.length > 0;
 
   const handleOpenNewCard = () => {
     setActivePopup('new');
@@ -116,15 +122,27 @@ function MainPageWithPopups() {
               </SError>
             )}
             
-            <SMainContent>
-              {statuses.map((status, i) => (
-                <Column 
-                  key={i} 
-                  title={status} 
-                  onCardClick={handleOpenTask}
-                />
-              ))}
-            </SMainContent>
+            {!error && !hasTasks && (
+              <SEmptyState>
+                <SEmptyIcon>📝</SEmptyIcon>
+                <SEmptyTitle>Задач пока нет</SEmptyTitle>
+                <SEmptyText>
+                  Создайте первую задачу, чтобы начать работу над проектом
+                </SEmptyText>
+              </SEmptyState>
+            )}
+            
+            {hasTasks && (
+              <SMainContent>
+                {statuses.map((status, i) => (
+                  <Column 
+                    key={i} 
+                    title={status} 
+                    onCardClick={handleOpenTask}
+                  />
+                ))}
+              </SMainContent>
+            )}
           </SMainBlock>
         </Container>
       </SMain>

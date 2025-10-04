@@ -33,16 +33,57 @@ function RegisterPage() {
         if (error) setError('');
     };
 
+    // Функция для проверки валидности полей
+    const validateForm = () => {
+        const trimmedName = formData.name.trim();
+        const trimmedLogin = formData.login.trim();
+        const trimmedPassword = formData.password.trim();
+
+        if (!trimmedName) {
+            setError('Введите имя');
+            return false;
+        }
+
+        if (!trimmedLogin) {
+            setError('Введите логин');
+            return false;
+        }
+
+        if (trimmedLogin.length < 3) {
+            setError('Логин должен содержать минимум 3 символа');
+            return false;
+        }
+
+        if (!trimmedPassword) {
+            setError('Введите пароль');
+            return false;
+        }
+
+        if (trimmedPassword.length < 6) {
+            setError('Пароль должен содержать минимум 6 символов');
+            return false;
+        }
+
+        return true;
+    };
+
     const handleRegister = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setError('');
 
+        // Валидация формы
+        if (!validateForm()) {
+            setIsLoading(false);
+            return;
+        }
+
         try {
+            // Отправляем очищенные от пробелов данные
             const response = await authAPI.register({
-                name: formData.name,
-                login: formData.login,
-                password: formData.password
+                name: formData.name.trim(),
+                login: formData.login.trim(),
+                password: formData.password // пароль не триммим, пробелы могут быть частью пароля
             });
 
             login(

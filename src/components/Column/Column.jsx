@@ -42,8 +42,14 @@ function Column({ title, onCardClick }) {
     });
   };
 
+  const handleEditTask = (taskId) => {
+    onCardClick(taskId);
+  };
+
   const handleDeleteTask = (taskId) => {
-    deleteTask(taskId);
+    if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
+      deleteTask(taskId);
+    }
   };
 
   return (
@@ -64,8 +70,9 @@ function Column({ title, onCardClick }) {
             title={card.title}
             topic={card.topic}
             date={formatDate(card.date)}
-            onDelete={handleDeleteTask}
             onCardClick={onCardClick}
+            onEdit={handleEditTask}
+            onDelete={handleDeleteTask}
           />
         ))}
       </SCardsContainer>
