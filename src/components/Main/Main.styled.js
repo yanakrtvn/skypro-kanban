@@ -24,7 +24,7 @@ export const SMainContent = styled.div`
   @media screen and (max-width: 1200px) {
     display: block;
   }
-`;
+;` 
 
 export const SLoadingContent = styled.div`
   display: flex;

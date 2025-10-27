@@ -34,5 +34,6 @@ export const SCardsContainer = styled.div`
     width: 100%;
     display: flex;
     overflow-y: auto;
+    flex-direction: column;
   }
 `;

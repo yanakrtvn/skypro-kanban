@@ -43,7 +43,7 @@ html,
 body {
   width: 100%;
   height: 100%;
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-family: "Roboto";
   color: #000000;
   background-color: #F1F1F1;
 }
@@ -102,10 +102,17 @@ body {
 
 ._btn-bor {
   border-radius: 4px;
-  border: 0.7px solid var(--palette-navy-60, #565EEF);
   outline: none;
   background: transparent;
-  color: #565EEF;
+  color:  var(--Palette-Navy-60, rgba(86, 94, 239, 1));;
+  box-sizing: border-box;
+  border: 0.7px solid var(--Palette-Navy-60, rgba(86, 94, 239, 1));
+  border-radius: 4px;
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 10px;
+  text-align: center;
 }
 ._btn-bor a {
   color: #565EEF;
@@ -113,10 +120,17 @@ body {
 
 ._btn-bg {
   border-radius: 4px;
-  background: #565EEF;
+  background: var(--Palette-Navy-60, rgba(86, 94, 239, 1));
   border: none;
   outline: none;
-  color: #FFFFFF;
+  color: rgba(255, 255, 255, 1);
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 10px;
+  letter-spacing: 0%;
+  text-align: center;
+    
 }
 ._btn-bg a {
   color: #FFFFFF;

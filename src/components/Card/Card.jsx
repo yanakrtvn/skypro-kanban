@@ -9,11 +9,12 @@ import {
   SCardContent,
   SCardDate,
   SDateText,
+  SDropdownMenu,
+  SDropdownItem
 } from "./Card.styled.js";
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
 
-function Card({ title, topic, date, id }) {
+function Card({ title, topic, date, id, onCardClick, onEdit, onDelete }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const dropdownRef = useRef(null);
@@ -50,14 +51,47 @@ function Card({ title, topic, date, id }) {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleCardClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isDropdownOpen) {
+      setIsDropdownOpen(false);
+      return;
+    }
+    
+    if (!isDragging && onCardClick) {
+      onCardClick(id);
+    }
+  };
+
+  const handleEditClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropdownOpen(false);
+    if (onEdit) {
+      onEdit(id);
+    }
+  };
+
+  const handleDeleteClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropdownOpen(false);
+    if (onDelete) {
+      onDelete(id);
+    }
+  };
+
   return (
     <SCardItem 
       draggable="true"
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onClick={handleCardClick}
       style={{ 
         opacity: isDragging ? 0.4 : 1,
-        cursor: 'grab'
+        cursor: isDragging ? 'grabbing' : 'pointer'
       }}
     >
       <SCardContainer>
@@ -69,17 +103,26 @@ function Card({ title, topic, date, id }) {
             href="#"
             onClick={handleMenuClick}
             ref={dropdownRef}
+            style={{ position: 'relative' }}
           >
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
             <SCardBtn></SCardBtn>
-  
+            
+            {isDropdownOpen && (
+              <SDropdownMenu>
+                <SDropdownItem onClick={handleEditClick}>
+                  Редактировать
+                </SDropdownItem>
+                <SDropdownItem onClick={handleDeleteClick} className="delete">
+                  Удалить
+                </SDropdownItem>
+              </SDropdownMenu>
+            )}
           </SCardButton>
         </SCardGroup>
         <SCardContent>
-          <Link to={`/card/${id}`} style={{ textDecoration: 'none' }}>
-            <SCardTitle>{title}</SCardTitle>
-          </Link>
+          <SCardTitle>{title}</SCardTitle>
           <SCardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"

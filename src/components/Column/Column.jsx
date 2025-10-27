@@ -7,7 +7,7 @@ import {
 } from "./Column.styled.js";
 import { useTasks } from '../../contexts/TaskContext';
 
-function Column({ title }) {
+function Column({ title, onCardClick }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const { tasks, updateTask, deleteTask } = useTasks();
 
@@ -42,8 +42,14 @@ function Column({ title }) {
     });
   };
 
+  const handleEditTask = (taskId) => {
+    onCardClick(taskId);
+  };
+
   const handleDeleteTask = (taskId) => {
-    deleteTask(taskId);
+    if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
+      deleteTask(taskId);
+    }
   };
 
   return (
@@ -64,6 +70,8 @@ function Column({ title }) {
             title={card.title}
             topic={card.topic}
             date={formatDate(card.date)}
+            onCardClick={onCardClick}
+            onEdit={handleEditTask}
             onDelete={handleDeleteTask}
           />
         ))}

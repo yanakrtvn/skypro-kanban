@@ -15,7 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import { useAuth } from '../../contexts/AuthContext';
 
-function Header() {
+function Header({ onNewCardClick, onExitClick }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
   const { userData } = useAuth();
@@ -37,13 +37,23 @@ function Header() {
     };
   }, []);
 
-  const handleLogoutClick = (e) => {
+  const handleNewCardClick = (e) => {
     e.preventDefault();
-    setUserMenuOpen(false);
+    if (onNewCardClick) {
+      onNewCardClick();
+    }
   };
 
-  const userName = userData?.name || "Иван Иванов";
-  const userEmail = userData?.email || "ivan.ivanov@gmail.com";
+  const handleExitClick = (e) => {
+    e.preventDefault();
+    setUserMenuOpen(false);
+    if (onExitClick) {
+      onExitClick();
+    }
+  };
+
+   const userName = userData?.name || userData?.login || "Пользователь";
+  const userEmail = userData?.login ? `${userData.login}@example.com` : "email@example.com";
 
   return (
     <SHeader>
@@ -59,8 +69,12 @@ function Header() {
           </Link>
         </SHeaderLogo>
         <SHeaderNav>
-          <SHeaderButton className="_hover01" id="btnMainNew">
-            <Link to="/card/new">Создать новую задачу</Link>
+          <SHeaderButton 
+            className="_hover01" 
+            id="btnMainNew"
+            onClick={handleNewCardClick}
+          >
+            <a href="#" onClick={handleNewCardClick}>Создать новую задачу</a>
           </SHeaderButton>
           <SHeaderUser 
             className="_hover02" 
@@ -73,11 +87,6 @@ function Header() {
               height="7" 
               viewBox="0 0 12 7" 
               fill="none"
-              style={{ 
-                marginLeft: '8px',
-                transform: userMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s ease'
-              }}
             >
               <path d="M1 1L6 6L11 1" stroke="#94A6BE" strokeWidth="1.5"/>
             </svg>
@@ -91,18 +100,18 @@ function Header() {
             <SUserMenuName>{userName}</SUserMenuName>
             <SUserMenuEmail>{userEmail}</SUserMenuEmail>
             <SUserMenuTheme>
-              <p>Темная тема</p>
-              <label className="theme-switch">
-                <input type="checkbox" className="checkbox" name="checkbox" />
-                <span className="theme-slider"></span>
-              </label>
-            </SUserMenuTheme>
+  <p>Темная тема</p>
+  <input 
+    type="checkbox" 
+    className="theme-checkbox"
+  />
+</SUserMenuTheme>
             <SUserMenuButton 
               type="button" 
               className="_hover03"
-              onClick={handleLogoutClick}
+              onClick={handleExitClick}
             >
-              <Link to="/exit">Выйти</Link>
+              <a href="#" onClick={handleExitClick}>Выйти</a>
             </SUserMenuButton>
           </SHeaderUserMenu>
         </SHeaderNav>

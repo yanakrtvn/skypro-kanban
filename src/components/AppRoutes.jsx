@@ -1,13 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import Layout from './Layout/Layout';
 import ProtectedRoute from './ProtectedRoute';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import RegisterPage from '../pages/RegisterPage/RegisterPage';
-import ExitPage from '../pages/ExitPage/ExitPage';
-import MainPage from '../pages/MainPage/MainPage';
-import CardPage from '../pages/CardPage/CardPage';
-import NewCardPage from '../pages/NewCardPage/NewCardPage';
+import MainPageWithPopups from '../pages/MainPage/MainPageWithPopups';
+import CardPageWithPopup from '../pages/CardPage/CardPageWithPopup';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 
 function AppRoutes() {
@@ -20,14 +17,15 @@ function AppRoutes() {
       
       <Route path="/" element={
         <ProtectedRoute>
-          <Layout />
+          <MainPageWithPopups />
         </ProtectedRoute>
-      }>
-        <Route index element={<MainPage />} />
-        <Route path="card/new" element={<NewCardPage />} />
-        <Route path="card/:id" element={<CardPage />} />
-        <Route path="exit" element={<ExitPage />} />
-      </Route>
+      } />
+      
+      <Route path="/card/:id" element={
+        <ProtectedRoute>
+          <CardPageWithPopup />
+        </ProtectedRoute>
+      } />
       
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

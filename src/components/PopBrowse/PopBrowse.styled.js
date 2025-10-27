@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const SPopBrowse = styled.div`
-  display: ${props => props.isOpen ? 'block' : 'none'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
   width: 100%;
   height: 100%;
   min-width: 375px;
@@ -14,11 +14,7 @@ export const SPopBrowse = styled.div`
   @media screen and (max-width: 660px) {
     top: 70px;
   }
-
-  @media screen and (max-width: 495px) {
-  }
 `;
-
 
 export const SPopBrowseContainer = styled.div`
   width: 100%;
@@ -64,16 +60,22 @@ export const SPopBrowseContent = styled.div`
 
 export const SPopBrowseTopBlock = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 18px;
+  gap: 15px;
 `;
 
 export const SPopBrowseTtl = styled.h3`
   color: #000;
   font-size: 20px;
   font-weight: 600;
-  line-height: 24px;
+  line-height: 1.3;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1;
+  min-width: 0;
 `;
 
 export const SPopBrowseWrap = styled.div`
@@ -100,13 +102,14 @@ export const SFormBrowseArea = styled.textarea`
   outline: none;
   padding: 14px;
   background: #EAEEF6;
-  border: 0.7px solid rgba(148, 166, 190, 0.4);
+  border: none;
   border-radius: 8px;
   font-size: 14px;
-  line-height: 1;
+  line-height: 1.4;
   letter-spacing: -0.14px;
   margin-top: 14px;
   height: 200px;
+  resize: vertical;
   
   &::placeholder {
     font-weight: 400;
@@ -147,88 +150,6 @@ export const SStatusTheme = styled.div`
   }
 `;
 
-export const SCalendar = styled.div`
-  width: 182px;
-  margin-bottom: 20px;
-`;
-
-export const SCalendarTtl = styled.p`
-  margin-bottom: 14px;
-  padding: 0 7px;
-`;
-
-export const SCalendarBlock = styled.div`
-  display: block;
-`;
-
-export const SCalendarContent = styled.div`
-  margin-bottom: 12px;
-`;
-
-export const SCalendarDaysNames = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  margin: 7px 0;
-  padding: 0 7px;
-`;
-
-export const SCalendarCells = styled.div`
-  width: 182px;
-  height: 126px;
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-export const SCalendarCell = styled.div`
-  width: 22px;
-  height: 22px;
-  margin: 2px;
-  border-radius: 50%;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  color: #94A6BE;
-  font-size: 10px;
-  line-height: 1;
-  letter-spacing: -0.2px;
-  cursor: pointer;
-`;
-
-export const SCalendarNav = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 14px;
-  padding: 0 7px;
-`;
-
-export const SCalendarPeriod = styled.div`
-  padding: 0 7px;
-`;
-
-export const SNavActions = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-export const SNavAction = styled.div`
-  width: 18px;
-  height: 25px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  svg {
-    fill: #94A6BE;
-  }
-`;
-
 export const SCategories = styled.div`
   margin-bottom: 20px;
 `;
@@ -237,27 +158,41 @@ export const SCategoriesP = styled.p`
   margin-bottom: 14px;
 `;
 
-export const SCategoriesThemes = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-`;
-
 export const SCategoriesTheme = styled.div`
-  display: inline-block;
-  width: auto;
-  height: 30px;
-  padding: 8px 20px;
   border-radius: 24px;
-  margin-right: 7px;
   opacity: 0.4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
   
   p {
     font-size: 14px;
     font-weight: 600;
     line-height: 14px;
     white-space: nowrap;
+  }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    white-space: nowrap;
+  }
+
+  select::-ms-expand {
+    display: none;
   }
 `;
 
@@ -295,3 +230,64 @@ export const SPopBrowseBtnEdit = styled.div`
   }
 `;
 
+export const STitleInput = styled.input`
+  border: none;
+  background: transparent;
+  color: #000;
+  width: 100%;
+  outline: none;
+  border-bottom: 2px solid #4A6CF7;
+  padding: 8px 4px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: text;
+  background-color: #f8f9ff;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+  min-height: 40px;
+  resize: none;
+  
+  &:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.1);
+  }
+  
+  &::placeholder {
+    color: #94A6BE;
+    font-weight: 400;
+  }
+`;
+
+export const STopicSelect = styled.select`
+  border: none;
+  background: transparent;
+  color: inherit;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+  max-width: 120px;
+  
+  &:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+`;
+
+export const SErrorDiv = styled.div`
+  color: red;
+  margin-bottom: 15px;
+  text-align: center;
+  padding: 10px;
+  background-color: #ffe6e6;
+  border-radius: 4px;
+  word-wrap: break-word;
+`;

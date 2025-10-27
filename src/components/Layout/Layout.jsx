@@ -1,7 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import Header from '../Header/Header';
 
 const LayoutWrapper = styled.div`
   min-height: 100vh;
@@ -26,7 +25,6 @@ const Container = styled.div`
 export const Layout = () => {
   return (
     <LayoutWrapper>
-      <Header />
       <SMain>
         <Container>
           <Outlet />

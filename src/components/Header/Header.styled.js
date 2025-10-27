@@ -5,7 +5,6 @@ export const SHeader = styled.header`
   margin: 0 auto;
   background-color: #FFFFFF;
   padding: 11px 0;
-
   top: 0;
   left: 0;
   z-index: 1000;
@@ -85,6 +84,13 @@ export const SHeaderUser = styled.div`
   border: 1px solid ${props => props.$active ? '#565EEF' : 'transparent'};
   background: ${props => props.$active ? '#F0F2FF' : 'transparent'};
   transition: all 0.3s ease;
+  max-width: 200px;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   
   &:hover {
     background: #F0F2FF;
@@ -93,19 +99,24 @@ export const SHeaderUser = styled.div`
 `;
 
 export const SHeaderUserMenu = styled.div`
-  display: ${props => props.$visible ? 'block' : 'none'};
+  display: ${props => props.$visible ? 'flex' : 'none'};
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 10px;
-  background: #FFFFFF;
-  border: 0.7px solid #D4DBE5;
-  border-radius: 8px;
+  margin-top: 10px; 
+  background: rgba(255, 255, 255, 1);
+  border: 0.7px solid rgba(148, 166, 190, 0.4);
+  border-radius: 10px;
   box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
-  padding: 24px;
-  min-width: 250px;
+  padding: 24px 20px;
   z-index: 1001;
   animation: fadeIn 0.3s ease;
+  box-sizing: border-box;
+  width: 213px;
+  min-height: 205px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 
   @keyframes fadeIn {
     from {
@@ -117,72 +128,117 @@ export const SHeaderUserMenu = styled.div`
       transform: translateY(0);
     }
   }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    right: 20px;
-    width: 12px;
-    height: 12px;
-    background: #FFFFFF;
-    border-top: 0.7px solid #D4DBE5;
-    border-left: 0.7px solid #D4DBE5;
-    transform: rotate(45deg);
-  }
 `;
 
 export const SUserMenuName = styled.p`
   color: #000;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.14px;
   margin-bottom: 4px;
+  width: 100%;
+  text-align: center;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 export const SUserMenuEmail = styled.p`
   color: #94A6BE;
   font-size: 14px;
-  line-height: 21px;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #EAEEF6;
+  line-height: 1.3;
+  letter-spacing: -0.14px;
+  margin-bottom: 10px;
+  width: 100%;
+  text-align: center;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 export const SUserMenuTheme = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 30px;
+  width: 100%;
+  text-align: center;
   
   p {
     color: #000;
     font-size: 14px;
     line-height: 21px;
+    letter-spacing: -0.14px;
     margin: 0;
+    text-align: center;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    flex: 1;
+    padding-right: 10px;
+  }
+  
+  input[type=checkbox] {
+    position: relative;
+    width: 24px;
+    height: 13px;
+    border-radius: 100px;
+    background: #EAEEF6;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  
+  input[type=checkbox]::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background-color: #94A6BE;
+    transition: 0.5s;
+  }
+  
+  input:checked[type=checkbox]::before {
+    left: 12px;
   }
 `;
 
 export const SUserMenuButton = styled.button`
-  width: 100%;
-  height: 36px;
+  width: 72px;
+  height: 30px;
   background: transparent;
   color: #565EEF;
-  border-radius: 6px;
+  border-radius: 4px;
   border: 1px solid #565EEF;
-  font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0;
   
   a {
-    color: #565EEF;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    color: rgba(86, 94, 239, 1);
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+    letter-spacing: 0%;
+    text-align: center;
   }
   
   &:hover {
@@ -199,6 +255,7 @@ export const ThemeSwitch = styled.label`
   display: inline-block;
   width: 44px;
   height: 24px;
+  flex-shrink: 0;
   
   .checkbox {
     opacity: 0;

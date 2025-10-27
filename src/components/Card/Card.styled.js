@@ -73,9 +73,20 @@ export const SCardBtn = styled.div`
 export const SCardTitle = styled.h3`
   font-size: 14px;
   font-weight: 500;
-  line-height: 18px;
+  line-height: 1.3;
   color: #000000;
   margin-bottom: 10px;
+  width: 100%;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 36px;
+  min-height: 18px;
 `;
 
 export const SCardContent = styled.div`
@@ -84,6 +95,7 @@ export const SCardContent = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+  width: 100%;
 `;
 
 export const SCardDate = styled.div`
@@ -135,6 +147,39 @@ export const SCardDropdownItem = styled.button`
   &.delete {
     color: #ff0000;
     
+    &:hover {
+      background-color: #ffe6e6;
+    }
+  }
+`;
+
+export const SDropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 150px;
+  padding: 8px 0;
+`;
+
+export const SDropdownItem = styled.div`
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &.delete {
+    color: #ff4444;
+
     &:hover {
       background-color: #ffe6e6;
     }
